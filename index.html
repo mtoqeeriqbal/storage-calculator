@@ -127,18 +127,71 @@
 
   <script>
     const roomItems = {
-      "living-room": [
-        { name: "2-seater sofa", cubicFeet: 30, icon: "🛋️" },
-        { name: "Armchair", cubicFeet: 18, icon: "🪑" }
-      ],
-      "kitchen": [
-        { name: "Dining Table", cubicFeet: 25, icon: "🍽️" },
-        { name: "Refrigerator", cubicFeet: 30, icon: "❄️" }
-      ],
-      "bedroom": [
-        { name: "Double Bed", cubicFeet: 40, icon: "🛏️" },
-        { name: "Wardrobe", cubicFeet: 45, icon: "👔" }
-      ]
+'living-room': [
+                { name: '2-seater sofa', cubicFeet: 30, icon: '🛋️' },
+                { name: '3-seater sofa', cubicFeet: 35, icon: '🛋️' },
+                { name: 'Corner sofa', cubicFeet: 45, icon: '🛋️' },
+                { name: 'Chaise longue', cubicFeet: 25, icon: '🪑' },
+                { name: 'Armchair', cubicFeet: 18, icon: '🪑' },
+                { name: 'Coffee table', cubicFeet: 8, icon: '🪑' },
+                { name: 'Bookcase', cubicFeet: 25, icon: '📚' },
+                { name: 'TV cabinet', cubicFeet: 12, icon: '📺' },
+                { name: 'TV bench', cubicFeet: 10, icon: '📺' },
+                { name: 'Floor lamp', cubicFeet: 2, icon: '💡' },
+                { name: 'Rug', cubicFeet: 3, icon: '🟫' },
+                { name: 'Moving box', cubicFeet: 2, icon: '📦' }
+            ],
+            'kitchen': [
+                { name: 'Dining Table', cubicFeet: 25, icon: '🍽️' },
+                { name: 'Dining Chair', cubicFeet: 6, icon: '🪑' },
+                { name: 'Refrigerator', cubicFeet: 30, icon: '❄️' },
+                { name: 'Microwave', cubicFeet: 3, icon: '📱' },
+                { name: 'Kitchen Appliances', cubicFeet: 8, icon: '🔌' },
+                { name: 'Pots & Pans', cubicFeet: 5, icon: '🍳' },
+                { name: 'China Set', cubicFeet: 4, icon: '🍽️' },
+                { name: 'Kitchen Cart', cubicFeet: 12, icon: '🛒' }
+            ],
+            'bedroom': [
+                { name: 'Double Bed', cubicFeet: 40, icon: '🛏️' },
+                { name: 'Single Bed', cubicFeet: 25, icon: '🛏️' },
+                { name: 'Wardrobe', cubicFeet: 45, icon: '👔' },
+                { name: 'Chest of Drawers', cubicFeet: 20, icon: '🗄️' },
+                { name: 'Bedside Table', cubicFeet: 5, icon: '🪑' },
+                { name: 'Dressing Table', cubicFeet: 15, icon: '💄' },
+                { name: 'Mirror', cubicFeet: 3, icon: '🪞' },
+                { name: 'Mattress (Double)', cubicFeet: 20, icon: '🛏️' },
+                { name: 'Mattress (Single)', cubicFeet: 12, icon: '🛏️' }
+            ],
+            'children': [
+                { name: 'Crib/Cot', cubicFeet: 20, icon: '👶' },
+                { name: 'Toy Chest', cubicFeet: 10, icon: '🧸' },
+                { name: 'Bookshelf (Kids)', cubicFeet: 15, icon: '📚' },
+                { name: 'Desk (Kids)', cubicFeet: 12, icon: '✏️' },
+                { name: 'Chair (Kids)', cubicFeet: 4, icon: '🪑' },
+                { name: 'Clothes', cubicFeet: 8, icon: '👕' },
+                { name: 'Toys & Games', cubicFeet: 6, icon: '🎮' },
+                { name: 'Sports Equipment', cubicFeet: 8, icon: '⚽' }
+            ],
+            'office': [
+                { name: 'Desk', cubicFeet: 20, icon: '🖥️' },
+                { name: 'Office Chair', cubicFeet: 10, icon: '🪑' },
+                { name: 'Filing Cabinet', cubicFeet: 12, icon: '🗄️' },
+                { name: 'Computer/Monitor', cubicFeet: 8, icon: '💻' },
+                { name: 'Printer', cubicFeet: 4, icon: '🖨️' },
+                { name: 'Books/Documents', cubicFeet: 15, icon: '📚' },
+                { name: 'Office Supplies', cubicFeet: 3, icon: '📝' },
+                { name: 'Shelving Unit', cubicFeet: 18, icon: '📚' }
+            ],
+            'others': [
+                { name: 'Bicycle', cubicFeet: 8, icon: '🚲' },
+                { name: 'Lawn Mower', cubicFeet: 15, icon: '🌱' },
+                { name: 'Tools', cubicFeet: 10, icon: '🔧' },
+                { name: 'Garden Furniture', cubicFeet: 25, icon: '🌿' },
+                { name: 'Christmas Decorations', cubicFeet: 8, icon: '🎄' },
+                { name: 'Storage Boxes', cubicFeet: 5, icon: '📦' },
+                { name: 'Vacuum Cleaner', cubicFeet: 4, icon: '🧹' },
+                { name: 'Suitcases', cubicFeet: 6, icon: '🧳' }
+            ]
     };
 
     let selectedItems = {};
