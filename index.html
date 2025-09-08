@@ -40,7 +40,6 @@
     .room-tab-count { font-size: 0.75rem; opacity: 0.8; margin-top: 4px; }
 
     /* === Items === */
-    .items-section {}
     .items-title { font-size: 1.8rem; font-weight: 600; text-align: center; margin-bottom: 8px; }
     .items-subtitle {
       color: #FEDD58; font-size: 1.1rem; font-weight: 600;
@@ -54,7 +53,7 @@
     }
     .item-card {
       background: white; border: 2px solid #e2e8f0; border-radius: 12px;
-      padding: 16px; transition: all 0.3s ease; position: relative;
+      padding: 16px; transition: all 0.3s ease;
     }
     .item-card:hover { border-color: #FEDD58; transform: translateY(-4px); }
     .item-card.selected { border-color: #FEDD58; background: #fff9e6; }
@@ -83,10 +82,6 @@
     .storage-size { font-size: 2.8rem; font-weight: 700; margin: 8px 0; }
     .storage-price { font-size: 1.2rem; font-weight: 600; color: #FEDD58; background: #1a202c; padding: 8px 16px; border-radius: 20px; display: inline-block; margin-top: 12px; }
     .storage-description { font-weight: 600; margin-bottom: 20px; }
-    .storage-uses-list { list-style: none; padding: 0; }
-    .storage-uses-item { margin-bottom: 8px; padding-left: 20px; position: relative; color: #64748b; }
-    .storage-uses-item::before { content: '•'; color: #FEDD58; position: absolute; left: 0; }
-
     .reset-button {
       background: #f8fafc; color: #64748b; border: 2px solid #e2e8f0;
       padding: 10px 20px; border-radius: 20px; cursor: pointer; font-weight: 600;
@@ -98,7 +93,7 @@
   <div class="container">
     <div class="header-section">
       <div class="header-title">Storage Calculator</div>
-      <div class="header-subtitle">Select items from different rooms and we'll calculate the optimal storage space needed.</div>
+      <div class="header-subtitle">Select items and we'll calculate how many containers you need.</div>
     </div>
 
     <!-- Tabs -->
@@ -119,35 +114,31 @@
     <!-- Results -->
     <div class="results-panel" id="resultsPanel">
       <div class="results-left">
-        <div class="results-title">Recommended storage</div>
-        <div class="storage-size" id="storageSize">Boxes</div>
-        <div class="storage-price" id="storagePrice">from £2.50/week</div>
+        <div class="results-title">Recommended Storage</div>
+        <div class="storage-size" id="storageSize">0</div>
+        <div class="storage-price" id="storagePrice">Container(s)</div>
       </div>
       <div class="results-right">
-        <div class="storage-description" id="storageDescription">Approx the size of a Large Moving Box</div>
-        <div id="storageUses">
-          <ul class="storage-uses-list">
-            <li class="storage-uses-item">Store a box full of books</li>
-          </ul>
-        </div>
+        <div class="storage-description" id="storageDescription">Add items to see recommendation</div>
       </div>
       <button class="reset-button" onclick="resetCalculator()">Reset All Items</button>
     </div>
   </div>
 
   <script>
-    // Storage sizes
-    const storageSizes = [
-      { size: 'Boxes', maxCubicFeet: 20, price: 'from £2.50/week', description: 'Approx the size of a Large Moving Box', uses: ['Store a box full of books'] },
-      { size: '15 SqFt', maxCubicFeet: 120, price: 'from £10/week', description: 'Approx the size of a garden storage container', uses: ['Perfect for decluttering'] },
-      { size: '35 SqFt', maxCubicFeet: 280, price: 'from £20/week', description: 'Size of a garden shed', uses: ['Contents of small studio flat'] }
-    ];
-
-    // Room items
     const roomItems = {
-      "living-room": [ { name: "2-seater sofa", cubicFeet: 30, icon: "🛋️" }, { name: "Armchair", cubicFeet: 18, icon: "🪑" } ],
-      "kitchen": [ { name: "Dining Table", cubicFeet: 25, icon: "🍽️" }, { name: "Refrigerator", cubicFeet: 30, icon: "❄️" } ],
-      "bedroom": [ { name: "Double Bed", cubicFeet: 40, icon: "🛏️" }, { name: "Wardrobe", cubicFeet: 45, icon: "👔" } ]
+      "living-room": [
+        { name: "2-seater sofa", cubicFeet: 30, icon: "🛋️" },
+        { name: "Armchair", cubicFeet: 18, icon: "🪑" }
+      ],
+      "kitchen": [
+        { name: "Dining Table", cubicFeet: 25, icon: "🍽️" },
+        { name: "Refrigerator", cubicFeet: 30, icon: "❄️" }
+      ],
+      "bedroom": [
+        { name: "Double Bed", cubicFeet: 40, icon: "🛏️" },
+        { name: "Wardrobe", cubicFeet: 45, icon: "👔" }
+      ]
     };
 
     let selectedItems = {};
@@ -219,11 +210,15 @@
           totalCubicFeet += roomItems[room].find(i => i.name === itemName).cubicFeet * selectedItems[room][itemName];
         });
       });
-      const recommendation = storageSizes.find(size => totalCubicFeet <= size.maxCubicFeet) || storageSizes[storageSizes.length - 1];
-      document.getElementById('storageSize').textContent = recommendation.size;
-      document.getElementById('storagePrice').textContent = recommendation.price;
-      document.getElementById('storageDescription').textContent = recommendation.description;
-      document.getElementById('storageUses').innerHTML = `<ul class="storage-uses-list">${recommendation.uses.map(u => `<li class="storage-uses-item">${u}</li>`).join('')}</ul>`;
+
+      // Apply new calculation logic
+      const bufferedVolume = totalCubicFeet * 1.2;
+      const containers = Math.ceil(bufferedVolume / 250);
+
+      document.getElementById('storageSize').textContent = containers;
+      document.getElementById('storagePrice').textContent = "Container(s)";
+      document.getElementById('storageDescription').textContent =
+        containers > 0 ? `You need ${containers} container(s)` : "Add items to see recommendation";
     }
 
     function resetCalculator() {
