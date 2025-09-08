@@ -2,296 +2,240 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Storage Calculator</title>
   <style>
+    /* === Base Styles === */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
-      font-family: Arial, sans-serif;
-      margin: 20px;
-      background: #f5f5f5;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f8fafc; color: #1a202c; line-height: 1.6;
     }
-    .calculator-container {
-      background: #fff;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-      max-width: 900px;
-      margin: auto;
+    .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+
+    /* === Header === */
+    .header-section { text-align: center; margin-bottom: 40px; }
+    .header-title { font-size: 2.5rem; font-weight: 700; margin-bottom: 12px; }
+    .header-subtitle { font-size: 1.1rem; color: #64748b; }
+
+    /* === Room Tabs === */
+    .room-tabs-section { margin-bottom: 30px; }
+    .room-tabs-title { font-size: 1.5rem; font-weight: 600; text-align: center; margin-bottom: 20px; }
+    .room-tabs-wrapper {
+      display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; padding: 0 10px;
     }
-    h1 {
-      text-align: center;
-      margin-bottom: 20px;
+    .room-tab-button {
+      background: white; border: 2px solid #e2e8f0; border-radius: 12px;
+      padding: 16px 24px; cursor: pointer; transition: all 0.3s ease;
+      font-weight: 600; color: #64748b; min-width: 140px; text-align: center;
     }
-    .tabs {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-bottom: 20px;
+    .room-tab-button:hover {
+      border-color: #FEDD58; color: #1a202c; transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(254, 221, 88, 0.25); background: #fff9e6;
     }
-    .tab-button {
-      padding: 10px 15px;
-      border: 1px solid #ccc;
-      background: #f9f9f9;
-      border-radius: 5px;
-      cursor: pointer;
+    .room-tab-button.active {
+      background: #FEDD58; border-color: #FEDD58; color: #1a202c;
+      box-shadow: 0 4px 12px rgba(254, 221, 88, 0.35);
     }
-    .tab-button.active {
-      background: #007bff;
-      color: #fff;
-      border-color: #007bff;
-    }
-    .items-section {
-      margin-bottom: 20px;
-    }
-    .items-title {
-      font-size: 18px;
-      font-weight: bold;
-      margin-bottom: 5px;
-    }
+    .room-tab-count { font-size: 0.75rem; opacity: 0.8; margin-top: 4px; }
+
+    /* === Items === */
+    .items-section {}
+    .items-title { font-size: 1.8rem; font-weight: 600; text-align: center; margin-bottom: 8px; }
     .items-subtitle {
-      font-size: 14px;
-      margin-bottom: 15px;
-      color: #666;
+      color: #FEDD58; font-size: 1.1rem; font-weight: 600;
+      text-align: center; margin-bottom: 30px; background: #1a202c;
+      padding: 8px 24px; border-radius: 20px; display: inline-block;
+      left: 50%; position: relative; transform: translateX(-50%);
     }
     .items-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-      gap: 15px;
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px; margin-bottom: 40px;
     }
     .item-card {
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      background: #fafafa;
-      padding: 10px;
-      text-align: center;
+      background: white; border: 2px solid #e2e8f0; border-radius: 12px;
+      padding: 16px; transition: all 0.3s ease; position: relative;
     }
-    .item-icon {
-      font-size: 24px;
-      margin-bottom: 5px;
-    }
-    .item-name {
-      font-weight: bold;
-      margin-bottom: 5px;
-    }
-    .item-details {
-      font-size: 12px;
-      margin-bottom: 10px;
-      color: #555;
-    }
-    .item-controls {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 5px;
-    }
+    .item-card:hover { border-color: #FEDD58; transform: translateY(-4px); }
+    .item-card.selected { border-color: #FEDD58; background: #fff9e6; }
+    .item-icon { width: 36px; height: 36px; margin: 0 auto 12px; font-size: 1.6rem; }
+    .item-name { font-weight: 600; text-align: center; }
+    .item-details { font-size: 0.8rem; color: #64748b; text-align: center; margin-bottom: 12px; }
+    .item-controls { display: flex; justify-content: center; gap: 12px; }
     .quantity-button {
-      background: #007bff;
-      color: #fff;
-      border: none;
-      border-radius: 4px;
-      padding: 4px 8px;
-      cursor: pointer;
+      width: 36px; height: 36px; border: 2px solid #e2e8f0; border-radius: 50%;
+      font-size: 1.2rem; cursor: pointer; background: white;
     }
-    .quantity-display {
-      min-width: 20px;
-      text-align: center;
+    .quantity-display { font-size: 1.2rem; font-weight: 600; }
+    .add-button {
+      background: #FEDD58; color: #1a202c; border: none; padding: 8px 16px;
+      border-radius: 20px; font-weight: 600; cursor: pointer;
     }
-    .results-section {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
-      margin-top: 20px;
+
+    /* === Results === */
+    .results-panel {
+      background: white; border-radius: 16px; padding: 24px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      border: 2px solid #e2e8f0; margin-bottom: 30px;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 30px;
     }
-    .result-card {
-      flex: 1 1 200px;
-      background: #f0f8ff;
-      padding: 15px;
-      border-radius: 8px;
-      text-align: center;
-    }
-    .buttons {
-      display: flex;
-      gap: 10px;
-      justify-content: center;
-      margin-top: 20px;
-    }
-    .calc-button {
-      background: #28a745;
-      color: #fff;
-      border: none;
-      border-radius: 6px;
-      padding: 10px 15px;
-      cursor: pointer;
-    }
+    .results-left { text-align: center; padding: 20px; background: #fff9e6; border: 2px solid #FEDD58; border-radius: 12px; }
+    .storage-size { font-size: 2.8rem; font-weight: 700; margin: 8px 0; }
+    .storage-price { font-size: 1.2rem; font-weight: 600; color: #FEDD58; background: #1a202c; padding: 8px 16px; border-radius: 20px; display: inline-block; margin-top: 12px; }
+    .storage-description { font-weight: 600; margin-bottom: 20px; }
+    .storage-uses-list { list-style: none; padding: 0; }
+    .storage-uses-item { margin-bottom: 8px; padding-left: 20px; position: relative; color: #64748b; }
+    .storage-uses-item::before { content: '•'; color: #FEDD58; position: absolute; left: 0; }
+
     .reset-button {
-      background: #dc3545;
-      color: #fff;
-      border: none;
-      border-radius: 6px;
-      padding: 10px 15px;
-      cursor: pointer;
+      background: #f8fafc; color: #64748b; border: 2px solid #e2e8f0;
+      padding: 10px 20px; border-radius: 20px; cursor: pointer; font-weight: 600;
+      grid-column: 1 / -1; margin-top: 20px;
     }
   </style>
 </head>
 <body>
-  <div class="calculator-container">
-    <h1>Storage Calculator</h1>
-    <div class="tabs" id="tabs"></div>
-    <div id="content-area"></div>
-    <div class="buttons">
-      <button class="calc-button" onclick="calculateStorage()">Calculate Storage</button>
-      <button class="reset-button" id="reset-cal" onclick="resetCalculator()">Reset</button>
+  <div class="container">
+    <div class="header-section">
+      <div class="header-title">Storage Calculator</div>
+      <div class="header-subtitle">Select items from different rooms and we'll calculate the optimal storage space needed.</div>
     </div>
-    <div class="results-section" id="results"></div>
+
+    <!-- Tabs -->
+    <div class="room-tabs-section">
+      <div class="room-tabs-title">Select a room</div>
+      <div class="room-tabs-wrapper" id="roomTabs">
+        <button class="room-tab-button" data-room="living-room">🛋️ Living Room <div id="count-living-room">Added: 0 items</div></button>
+        <button class="room-tab-button" data-room="kitchen">🍽️ Kitchen <div id="count-kitchen">Added: 0 items</div></button>
+        <button class="room-tab-button" data-room="bedroom">🛏️ Bedroom <div id="count-bedroom">Added: 0 items</div></button>
+      </div>
+    </div>
+
+    <!-- Items Grid -->
+    <div class="content-area" id="contentArea">
+      <div class="welcome-message"><p>👆 Choose a room above to start selecting items</p></div>
+    </div>
+
+    <!-- Results -->
+    <div class="results-panel" id="resultsPanel">
+      <div class="results-left">
+        <div class="results-title">Recommended storage</div>
+        <div class="storage-size" id="storageSize">Boxes</div>
+        <div class="storage-price" id="storagePrice">from £2.50/week</div>
+      </div>
+      <div class="results-right">
+        <div class="storage-description" id="storageDescription">Approx the size of a Large Moving Box</div>
+        <div id="storageUses">
+          <ul class="storage-uses-list">
+            <li class="storage-uses-item">Store a box full of books</li>
+          </ul>
+        </div>
+      </div>
+      <button class="reset-button" onclick="resetCalculator()">Reset All Items</button>
+    </div>
   </div>
 
   <script>
-    // Room + items definition
+    // Storage sizes
+    const storageSizes = [
+      { size: 'Boxes', maxCubicFeet: 20, price: 'from £2.50/week', description: 'Approx the size of a Large Moving Box', uses: ['Store a box full of books'] },
+      { size: '15 SqFt', maxCubicFeet: 120, price: 'from £10/week', description: 'Approx the size of a garden storage container', uses: ['Perfect for decluttering'] },
+      { size: '35 SqFt', maxCubicFeet: 280, price: 'from £20/week', description: 'Size of a garden shed', uses: ['Contents of small studio flat'] }
+    ];
+
+    // Room items
     const roomItems = {
-      "children": [
-        { name: "Crib", icon: "🛏️", cubicFeet: 15 },
-        { name: "Toy Box", icon: "🧸", cubicFeet: 10 },
-        { name: "Wardrobe", icon: "👕", cubicFeet: 25 }
-      ],
-      "living-room": [
-        { name: "Sofa", icon: "🛋️", cubicFeet: 50 },
-        { name: "TV Stand", icon: "📺", cubicFeet: 20 },
-        { name: "Coffee Table", icon: "☕", cubicFeet: 15 }
-      ],
-      "kitchen": [
-        { name: "Dining Table", icon: "🍽️", cubicFeet: 30 },
-        { name: "Fridge", icon: "🧊", cubicFeet: 40 },
-        { name: "Cabinet", icon: "🥫", cubicFeet: 20 }
-      ],
-      "bedroom": [
-        { name: "Bed", icon: "🛏️", cubicFeet: 60 },
-        { name: "Wardrobe", icon: "👔", cubicFeet: 40 },
-        { name: "Dresser", icon: "🪞", cubicFeet: 25 }
-      ],
-      "office": [
-        { name: "Desk", icon: "💻", cubicFeet: 20 },
-        { name: "Chair", icon: "🪑", cubicFeet: 15 },
-        { name: "Bookshelf", icon: "📚", cubicFeet: 35 }
-      ],
-      "others": [
-        { name: "Bicycle", icon: "🚲", cubicFeet: 30 },
-        { name: "Box (Medium)", icon: "📦", cubicFeet: 5 },
-        { name: "Box (Large)", icon: "📦", cubicFeet: 10 }
-      ]
+      "living-room": [ { name: "2-seater sofa", cubicFeet: 30, icon: "🛋️" }, { name: "Armchair", cubicFeet: 18, icon: "🪑" } ],
+      "kitchen": [ { name: "Dining Table", cubicFeet: 25, icon: "🍽️" }, { name: "Refrigerator", cubicFeet: 30, icon: "❄️" } ],
+      "bedroom": [ { name: "Double Bed", cubicFeet: 40, icon: "🛏️" }, { name: "Wardrobe", cubicFeet: 45, icon: "👔" } ]
     };
 
-    // Track selections
     let selectedItems = {};
-    for (const room in roomItems) {
-      selectedItems[room] = {};
+    let activeRoom = null;
+
+    function initCalculator() {
+      Object.keys(roomItems).forEach(room => {
+        selectedItems[room] = {};
+        roomItems[room].forEach(item => { selectedItems[room][item.name] = 0; });
+      });
+      document.querySelectorAll('.room-tab-button').forEach(tab => {
+        tab.addEventListener('click', function() { showRoom(this.dataset.room); });
+      });
+      showRoom('living-room');
+      calculateStorage();
+    }
+
+    function showRoom(room) {
+      document.querySelectorAll('.room-tab-button').forEach(tab => tab.classList.remove('active'));
+      document.querySelector(`[data-room="${room}"]`).classList.add('active');
+      activeRoom = room;
+
+      const contentArea = document.getElementById('contentArea');
+      contentArea.innerHTML = `<div class="items-section">
+        <div class="items-title">Items to store</div>
+        <div class="items-subtitle">${room}</div>
+        <div class="items-grid" id="itemsGrid"></div>
+      </div>`;
+
+      const itemsGrid = document.getElementById('itemsGrid');
       roomItems[room].forEach(item => {
-        selectedItems[room][item.name] = 0;
+        const div = document.createElement('div');
+        const quantity = selectedItems[room][item.name];
+        div.className = `item-card ${quantity > 0 ? 'selected' : ''}`;
+        div.innerHTML = `
+          <div class="item-icon">${item.icon}</div>
+          <div class="item-name">${item.name}</div>
+          <div class="item-details">${item.cubicFeet} cubic feet each</div>
+          <div class="item-controls">
+            ${quantity > 0 ? `
+              <button class="quantity-button" onclick="changeQuantity('${room}', '${item.name}', -1)">−</button>
+              <div class="quantity-display">${quantity}</div>
+              <button class="quantity-button" onclick="changeQuantity('${room}', '${item.name}', 1)">+</button>
+            ` : `<button class="add-button" onclick="changeQuantity('${room}', '${item.name}', 1)">Add</button>`}
+          </div>`;
+        itemsGrid.appendChild(div);
       });
     }
 
-    // Render tabs
-    const tabsDiv = document.getElementById("tabs");
-    for (const room in roomItems) {
-      const btn = document.createElement("button");
-      btn.className = "tab-button";
-      btn.textContent = room.replace("-", " ").toUpperCase();
-      btn.onclick = () => showRoom(room);
-      tabsDiv.appendChild(btn);
-    }
-
-    // Show a room
-    function showRoom(room) {
-      // Update active tab
-      document.querySelectorAll(".tab-button").forEach(b => b.classList.remove("active"));
-      [...tabsDiv.children].find(b => b.textContent.toLowerCase().includes(room.split("-")[0])).classList.add("active");
-
-      const roomName = 
-          room === 'children' ? "Children's Room" :
-          room === 'living-room' ? "Living Room" :
-          room === 'kitchen' ? "Kitchen & Dining" :
-          room === 'bedroom' ? "Bedroom" :
-          room === 'office' ? "Home Office" :
-          room === 'others' ? "Others" : '';
-
-      const contentArea = document.getElementById("content-area");
-      contentArea.innerHTML = `
-        <div class="items-section">
-          <div class="items-title">${roomName}</div>
-          <div class="items-subtitle">Select items below</div>
-          <div class="items-grid">
-            ${roomItems[room].map(item => `
-              <div class="item-card">
-                <div class="item-icon">${item.icon}</div>
-                <div class="item-name">${item.name}</div>
-                <div class="item-details">${item.cubicFeet} cu ft</div>
-                <div class="item-controls">
-                  <button class="quantity-button" onclick="updateQuantity('${room}','${item.name}',-1)">-</button>
-                  <div class="quantity-display" id="qty-${room}-${item.name.replace(/\s+/g,'-')}">${selectedItems[room][item.name]}</div>
-                  <button class="quantity-button" onclick="updateQuantity('${room}','${item.name}',1)">+</button>
-                </div>
-              </div>
-            `).join("")}
-          </div>
-        </div>
-      `;
-    }
-
-    // Update item quantity
-    function updateQuantity(room, itemName, change) {
+    function changeQuantity(room, itemName, change) {
       selectedItems[room][itemName] = Math.max(0, selectedItems[room][itemName] + change);
-      document.getElementById(`qty-${room}-${itemName.replace(/\s+/g,'-')}`).textContent =
-        selectedItems[room][itemName];
+      if (activeRoom === room) showRoom(room);
+      updateTabIndicators();
+      calculateStorage();
     }
 
-    // Calculate storage
+    function updateTabIndicators() {
+      Object.keys(roomItems).forEach(room => {
+        const countElement = document.getElementById(`count-${room}`);
+        let roomItemCount = Object.values(selectedItems[room]).reduce((a, b) => a + b, 0);
+        countElement.textContent = `Added: ${roomItemCount} item${roomItemCount !== 1 ? 's' : ''}`;
+      });
+    }
+
     function calculateStorage() {
-      let totalVolume = 0;
-
-      // Sum all items across rooms
-      for (const room in selectedItems) {
-        for (const item in selectedItems[room]) {
-          if (selectedItems[room][item] > 0) {
-            const itemDef = roomItems[room].find(i => i.name === item);
-            totalVolume += selectedItems[room][item] * itemDef.cubicFeet;
-          }
-        }
-      }
-
-      // Add 20% buffer
-      const bufferedVolume = totalVolume * 1.2;
-
-      // Divide by 250 cu ft per container
-      const containersNeeded = Math.ceil(bufferedVolume / 250);
-
-      // Display results
-      document.getElementById("results").innerHTML = `
-        <div class="result-card">
-          <h3>Total Volume</h3>
-          <p>${totalVolume} cu ft</p>
-        </div>
-        <div class="result-card">
-          <h3>+20% Buffer</h3>
-          <p>${bufferedVolume.toFixed(2)} cu ft</p>
-        </div>
-        <div class="result-card">
-          <h3>Recommended Containers</h3>
-          <p>${containersNeeded} container(s)</p>
-        </div>
-      `;
+      let totalCubicFeet = 0;
+      Object.keys(selectedItems).forEach(room => {
+        Object.keys(selectedItems[room]).forEach(itemName => {
+          totalCubicFeet += roomItems[room].find(i => i.name === itemName).cubicFeet * selectedItems[room][itemName];
+        });
+      });
+      const recommendation = storageSizes.find(size => totalCubicFeet <= size.maxCubicFeet) || storageSizes[storageSizes.length - 1];
+      document.getElementById('storageSize').textContent = recommendation.size;
+      document.getElementById('storagePrice').textContent = recommendation.price;
+      document.getElementById('storageDescription').textContent = recommendation.description;
+      document.getElementById('storageUses').innerHTML = `<ul class="storage-uses-list">${recommendation.uses.map(u => `<li class="storage-uses-item">${u}</li>`).join('')}</ul>`;
     }
 
-    // Reset
     function resetCalculator() {
-      for (const room in selectedItems) {
-        for (const item in selectedItems[room]) {
-          selectedItems[room][item] = 0;
-        }
-      }
-      document.getElementById("results").innerHTML = "";
-      showRoom("children");
+      Object.keys(selectedItems).forEach(room => {
+        Object.keys(selectedItems[room]).forEach(item => selectedItems[room][item] = 0);
+      });
+      showRoom(activeRoom);
+      updateTabIndicators();
+      calculateStorage();
     }
 
-    // Init
-    showRoom("children");
+    window.onload = initCalculator;
   </script>
 </body>
 </html>
