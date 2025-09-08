@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Storage Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      background: #f5f5f5;
+    }
+    .calculator-container {
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      max-width: 900px;
+      margin: auto;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .tabs {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+    .tab-button {
+      padding: 10px 15px;
+      border: 1px solid #ccc;
+      background: #f9f9f9;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .tab-button.active {
+      background: #007bff;
+      color: #fff;
+      border-color: #007bff;
+    }
+    .items-section {
+      margin-bottom: 20px;
+    }
+    .items-title {
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+    .items-subtitle {
+      font-size: 14px;
+      margin-bottom: 15px;
+      color: #666;
+    }
+    .items-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 15px;
+    }
+    .item-card {
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      background: #fafafa;
+      padding: 10px;
+      text-align: center;
+    }
+    .item-icon {
+      font-size: 24px;
+      margin-bottom: 5px;
+    }
+    .item-name {
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+    .item-details {
+      font-size: 12px;
+      margin-bottom: 10px;
+      color: #555;
+    }
+    .item-controls {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 5px;
+    }
+    .quantity-button {
+      background: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      padding: 4px 8px;
+      cursor: pointer;
+    }
+    .quantity-display {
+      min-width: 20px;
+      text-align: center;
+    }
+    .results-section {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      margin-top: 20px;
+    }
+    .result-card {
+      flex: 1 1 200px;
+      background: #f0f8ff;
+      padding: 15px;
+      border-radius: 8px;
+      text-align: center;
+    }
+    .buttons {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 20px;
+    }
+    .calc-button {
+      background: #28a745;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 10px 15px;
+      cursor: pointer;
+    }
+    .reset-button {
+      background: #dc3545;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 10px 15px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="calculator-container">
+    <h1>Storage Calculator</h1>
+    <div class="tabs" id="tabs"></div>
+    <div id="content-area"></div>
+    <div class="buttons">
+      <button class="calc-button" onclick="calculateStorage()">Calculate Storage</button>
+      <button class="reset-button" id="reset-cal" onclick="resetCalculator()">Reset</button>
+    </div>
+    <div class="results-section" id="results"></div>
+  </div>
+
+  <script>
+    // Room + items definition
+    const roomItems = {
+      "children": [
+        { name: "Crib", icon: "🛏️", cubicFeet: 15 },
+        { name: "Toy Box", icon: "🧸", cubicFeet: 10 },
+        { name: "Wardrobe", icon: "👕", cubicFeet: 25 }
+      ],
+      "living-room": [
+        { name: "Sofa", icon: "🛋️", cubicFeet: 50 },
+        { name: "TV Stand", icon: "📺", cubicFeet: 20 },
+        { name: "Coffee Table", icon: "☕", cubicFeet: 15 }
+      ],
+      "kitchen": [
+        { name: "Dining Table", icon: "🍽️", cubicFeet: 30 },
+        { name: "Fridge", icon: "🧊", cubicFeet: 40 },
+        { name: "Cabinet", icon: "🥫", cubicFeet: 20 }
+      ],
+      "bedroom": [
+        { name: "Bed", icon: "🛏️", cubicFeet: 60 },
+        { name: "Wardrobe", icon: "👔", cubicFeet: 40 },
+        { name: "Dresser", icon: "🪞", cubicFeet: 25 }
+      ],
+      "office": [
+        { name: "Desk", icon: "💻", cubicFeet: 20 },
+        { name: "Chair", icon: "🪑", cubicFeet: 15 },
+        { name: "Bookshelf", icon: "📚", cubicFeet: 35 }
+      ],
+      "others": [
+        { name: "Bicycle", icon: "🚲", cubicFeet: 30 },
+        { name: "Box (Medium)", icon: "📦", cubicFeet: 5 },
+        { name: "Box (Large)", icon: "📦", cubicFeet: 10 }
+      ]
+    };
+
+    // Track selections
+    let selectedItems = {};
+    for (const room in roomItems) {
+      selectedItems[room] = {};
+      roomItems[room].forEach(item => {
+        selectedItems[room][item.name] = 0;
+      });
+    }
+
+    // Render tabs
+    const tabsDiv = document.getElementById("tabs");
+    for (const room in roomItems) {
+      const btn = document.createElement("button");
+      btn.className = "tab-button";
+      btn.textContent = room.replace("-", " ").toUpperCase();
+      btn.onclick = () => showRoom(room);
+      tabsDiv.appendChild(btn);
+    }
+
+    // Show a room
+    function showRoom(room) {
+      // Update active tab
+      document.querySelectorAll(".tab-button").forEach(b => b.classList.remove("active"));
+      [...tabsDiv.children].find(b => b.textContent.toLowerCase().includes(room.split("-")[0])).classList.add("active");
+
+      const roomName = 
+          room === 'children' ? "Children's Room" :
+          room === 'living-room' ? "Living Room" :
+          room === 'kitchen' ? "Kitchen & Dining" :
+          room === 'bedroom' ? "Bedroom" :
+          room === 'office' ? "Home Office" :
+          room === 'others' ? "Others" : '';
+
+      const contentArea = document.getElementById("content-area");
+      contentArea.innerHTML = `
+        <div class="items-section">
+          <div class="items-title">${roomName}</div>
+          <div class="items-subtitle">Select items below</div>
+          <div class="items-grid">
+            ${roomItems[room].map(item => `
+              <div class="item-card">
+                <div class="item-icon">${item.icon}</div>
+                <div class="item-name">${item.name}</div>
+                <div class="item-details">${item.cubicFeet} cu ft</div>
+                <div class="item-controls">
+                  <button class="quantity-button" onclick="updateQuantity('${room}','${item.name}',-1)">-</button>
+                  <div class="quantity-display" id="qty-${room}-${item.name.replace(/\s+/g,'-')}">${selectedItems[room][item.name]}</div>
+                  <button class="quantity-button" onclick="updateQuantity('${room}','${item.name}',1)">+</button>
+                </div>
+              </div>
+            `).join("")}
+          </div>
+        </div>
+      `;
+    }
+
+    // Update item quantity
+    function updateQuantity(room, itemName, change) {
+      selectedItems[room][itemName] = Math.max(0, selectedItems[room][itemName] + change);
+      document.getElementById(`qty-${room}-${itemName.replace(/\s+/g,'-')}`).textContent =
+        selectedItems[room][itemName];
+    }
+
+    // Calculate storage
+    function calculateStorage() {
+      let totalVolume = 0;
+
+      // Sum all items across rooms
+      for (const room in selectedItems) {
+        for (const item in selectedItems[room]) {
+          if (selectedItems[room][item] > 0) {
+            const itemDef = roomItems[room].find(i => i.name === item);
+            totalVolume += selectedItems[room][item] * itemDef.cubicFeet;
+          }
+        }
+      }
+
+      // Add 20% buffer
+      const bufferedVolume = totalVolume * 1.2;
+
+      // Divide by 250 cu ft per container
+      const containersNeeded = Math.ceil(bufferedVolume / 250);
+
+      // Display results
+      document.getElementById("results").innerHTML = `
+        <div class="result-card">
+          <h3>Total Volume</h3>
+          <p>${totalVolume} cu ft</p>
+        </div>
+        <div class="result-card">
+          <h3>+20% Buffer</h3>
+          <p>${bufferedVolume.toFixed(2)} cu ft</p>
+        </div>
+        <div class="result-card">
+          <h3>Recommended Containers</h3>
+          <p>${containersNeeded} container(s)</p>
+        </div>
+      `;
+    }
+
+    // Reset
+    function resetCalculator() {
+      for (const room in selectedItems) {
+        for (const item in selectedItems[room]) {
+          selectedItems[room][item] = 0;
+        }
+      }
+      document.getElementById("results").innerHTML = "";
+      showRoom("children");
+    }
+
+    // Init
+    showRoom("children");
+  </script>
+</body>
+</html>
