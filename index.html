@@ -5,295 +5,232 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Storage Calculator</title>
   <style>
+    /* === Base Styles === */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      background: #f4f4f9;
-      color: #333;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f8fafc; color: #1a202c; line-height: 1.6;
     }
-    .calculator-container {
-      max-width: 1200px;
-      margin: 30px auto;
-      background: #fff;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+
+    /* === Header === */
+    .header-section { text-align: center; margin-bottom: 40px; }
+    .header-title { font-size: 2.5rem; font-weight: 700; margin-bottom: 12px; }
+    .header-subtitle { font-size: 1.1rem; color: #64748b; }
+
+    /* === Room Tabs === */
+    .room-tabs-section { margin-bottom: 30px; }
+    .room-tabs-title { font-size: 1.5rem; font-weight: 600; text-align: center; margin-bottom: 20px; }
+    .room-tabs-wrapper {
+      display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; padding: 0 10px;
     }
-    .tabs {
-      display: flex;
-      margin-bottom: 20px;
-      border-bottom: 2px solid #ddd;
+    .room-tab-button {
+      background: white; border: 2px solid #e2e8f0; border-radius: 12px;
+      padding: 16px 24px; cursor: pointer; transition: all 0.3s ease;
+      font-weight: 600; color: #64748b; min-width: 140px; text-align: center;
     }
-    .tab {
-      padding: 10px 20px;
-      cursor: pointer;
-      border: none;
-      background: none;
-      font-size: 16px;
+    .room-tab-button:hover {
+      border-color: #FEDD58; color: #1a202c; transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(254, 221, 88, 0.25); background: #fff9e6;
     }
-    .tab.active {
-      border-bottom: 3px solid #007bff;
-      font-weight: bold;
-      color: #007bff;
+    .room-tab-button.active {
+      background: #FEDD58; border-color: #FEDD58; color: #1a202c;
+      box-shadow: 0 4px 12px rgba(254, 221, 88, 0.35);
+    }
+    .room-tab-count { font-size: 0.75rem; opacity: 0.8; margin-top: 4px; }
+
+    /* === Items === */
+    .items-title { font-size: 1.8rem; font-weight: 600; text-align: center; margin-bottom: 8px; }
+    .items-subtitle {
+      color: #FEDD58; font-size: 1.1rem; font-weight: 600;
+      text-align: center; margin-bottom: 30px; background: #1a202c;
+      padding: 8px 24px; border-radius: 20px; display: inline-block;
+      left: 50%; position: relative; transform: translateX(-50%);
     }
     .items-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-      gap: 15px;
-      margin-top: 20px;
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px; margin-bottom: 40px;
     }
     .item-card {
-      background: #f9f9f9;
-      border: 1px solid #ddd;
-      padding: 15px;
-      border-radius: 8px;
-      text-align: center;
+      background: white; border: 2px solid #e2e8f0; border-radius: 12px;
+      padding: 16px; transition: all 0.3s ease;
     }
-    .item-icon {
-      font-size: 30px;
-      margin-bottom: 10px;
-    }
-    .item-name {
-      font-size: 14px;
-      margin-bottom: 5px;
-    }
-    .item-details {
-      font-size: 12px;
-      color: #555;
-      margin-bottom: 10px;
-    }
-    .item-controls {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 10px;
-    }
+    .item-card:hover { border-color: #FEDD58; transform: translateY(-4px); }
+    .item-card.selected { border-color: #FEDD58; background: #fff9e6; }
+    .item-icon { width: 36px; height: 36px; margin: 0 auto 12px; font-size: 1.6rem; }
+    .item-name { font-weight: 600; text-align: center; }
+    .item-details { font-size: 0.8rem; color: #64748b; text-align: center; margin-bottom: 12px; }
+    .item-controls { display: flex; justify-content: center; gap: 12px; }
     .quantity-button {
-      padding: 5px 10px;
-      font-size: 14px;
-      border: none;
-      background: #007bff;
-      color: white;
-      border-radius: 5px;
-      cursor: pointer;
+      width: 36px; height: 36px; border: 2px solid #e2e8f0; border-radius: 50%;
+      font-size: 1.2rem; cursor: pointer; background: white;
     }
-    .quantity-display {
-      font-size: 14px;
-      min-width: 20px;
-      text-align: center;
+    .quantity-display { font-size: 1.2rem; font-weight: 600; }
+    .add-button {
+      background: #FEDD58; color: #1a202c; border: none; padding: 8px 16px;
+      border-radius: 20px; font-weight: 600; cursor: pointer;
     }
-    .results {
-      margin-top: 30px;
-      padding: 20px;
-      background: #f1f8ff;
-      border: 1px solid #cce5ff;
-      border-radius: 8px;
+
+    /* === Results === */
+    .results-panel {
+      background: white; border-radius: 16px; padding: 24px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      border: 2px solid #e2e8f0; margin-bottom: 30px;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 30px;
     }
-    .result-card {
-      margin-bottom: 15px;
-    }
-    .result-card h3 {
-      margin: 0 0 5px 0;
-      font-size: 18px;
-      color: #007bff;
-    }
-    .actions {
-      margin-top: 20px;
-      display: flex;
-      gap: 10px;
-    }
-    .action-button {
-      padding: 10px 20px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 16px;
-    }
-    .calculate-btn {
-      background: #28a745;
-      color: white;
-    }
-    .reset-btn {
-      background: #dc3545;
-      color: white;
+    .results-left { text-align: center; padding: 20px; background: #fff9e6; border: 2px solid #FEDD58; border-radius: 12px; }
+    .storage-size { font-size: 2.8rem; font-weight: 700; margin: 8px 0; }
+    .storage-price { font-size: 1.2rem; font-weight: 600; color: #FEDD58; background: #1a202c; padding: 8px 16px; border-radius: 20px; display: inline-block; margin-top: 12px; }
+    .storage-description { font-weight: 600; margin-bottom: 20px; }
+    .reset-button {
+      background: #f8fafc; color: #64748b; border: 2px solid #e2e8f0;
+      padding: 10px 20px; border-radius: 20px; cursor: pointer; font-weight: 600;
+      grid-column: 1 / -1; margin-top: 20px;
     }
   </style>
 </head>
 <body>
-  <div class="calculator-container">
-    <div class="tabs" id="tabs"></div>
-    <div id="contentArea"></div>
-    <div class="actions">
-      <button class="action-button calculate-btn" onclick="calculateStorage()">Calculate</button>
-      <button class="action-button reset-btn" onclick="resetCalculator()">Reset</button>
+  <div class="container">
+    <div class="header-section">
+      <div class="header-title">Storage Calculator</div>
+      <div class="header-subtitle">Select items and we'll calculate how many containers you need.</div>
     </div>
-    <div class="results" id="results"></div>
+
+    <!-- Tabs -->
+    <div class="room-tabs-section">
+      <div class="room-tabs-title">Select a room</div>
+      <div class="room-tabs-wrapper" id="roomTabs">
+        <button class="room-tab-button" data-room="living-room">🛋️ Living Room <div id="count-living-room">Added: 0 items</div></button>
+        <button class="room-tab-button" data-room="kitchen">🍽️ Kitchen <div id="count-kitchen">Added: 0 items</div></button>
+        <button class="room-tab-button" data-room="bedroom">🛏️ Bedroom <div id="count-bedroom">Added: 0 items</div></button>
+      </div>
+    </div>
+
+    <!-- Items Grid -->
+    <div class="content-area" id="contentArea">
+      <div class="welcome-message"><p>👆 Choose a room above to start selecting items</p></div>
+    </div>
+
+    <!-- Results -->
+    <div class="results-panel" id="resultsPanel">
+      <div class="results-left">
+        <div class="results-title">Recommended Storage</div>
+        <div class="storage-size" id="storageSize">0</div>
+        <div class="storage-price" id="storagePrice">Container(s)</div>
+      </div>
+      <div class="results-right">
+        <div class="storage-description" id="storageDescription">Add items to see recommendation</div>
+      </div>
+      <button class="reset-button" onclick="resetCalculator()">Reset All Items</button>
+    </div>
   </div>
 
   <script>
-    // Room items with icons
     const roomItems = {
-      'living-room': [
-        { name: '2-seater sofa', cubicFeet: 30, icon: '🛋️' },
-        { name: '3-seater sofa', cubicFeet: 35, icon: '🛋️' },
-        { name: 'Corner sofa', cubicFeet: 45, icon: '🛋️' },
-        { name: 'Chaise longue', cubicFeet: 25, icon: '🪑' },
-        { name: 'Armchair', cubicFeet: 18, icon: '🪑' },
-        { name: 'Coffee table', cubicFeet: 8, icon: '🪑' },
-        { name: 'Bookcase', cubicFeet: 25, icon: '📚' },
-        { name: 'TV cabinet', cubicFeet: 12, icon: '📺' },
-        { name: 'TV bench', cubicFeet: 10, icon: '📺' },
-        { name: 'Floor lamp', cubicFeet: 2, icon: '💡' },
-        { name: 'Rug', cubicFeet: 3, icon: '🟫' },
-        { name: 'Moving box', cubicFeet: 2, icon: '📦' }
+      "living-room": [
+        { name: "2-seater sofa", cubicFeet: 30, icon: "🛋️" },
+        { name: "Armchair", cubicFeet: 18, icon: "🪑" }
       ],
-      'kitchen': [
-        { name: 'Dining Table', cubicFeet: 25, icon: '🍽️' },
-        { name: 'Dining Chair', cubicFeet: 6, icon: '🪑' },
-        { name: 'Refrigerator', cubicFeet: 30, icon: '❄️' },
-        { name: 'Microwave', cubicFeet: 3, icon: '📱' },
-        { name: 'Kitchen Appliances', cubicFeet: 8, icon: '🔌' },
-        { name: 'Pots & Pans', cubicFeet: 5, icon: '🍳' },
-        { name: 'China Set', cubicFeet: 4, icon: '🍽️' },
-        { name: 'Kitchen Cart', cubicFeet: 12, icon: '🛒' }
+      "kitchen": [
+        { name: "Dining Table", cubicFeet: 25, icon: "🍽️" },
+        { name: "Refrigerator", cubicFeet: 30, icon: "❄️" }
       ],
-      'bedroom': [
-        { name: 'Double Bed', cubicFeet: 40, icon: '🛏️' },
-        { name: 'Single Bed', cubicFeet: 25, icon: '🛏️' },
-        { name: 'Wardrobe', cubicFeet: 45, icon: '👔' },
-        { name: 'Chest of Drawers', cubicFeet: 20, icon: '🗄️' },
-        { name: 'Bedside Table', cubicFeet: 5, icon: '🪑' },
-        { name: 'Dressing Table', cubicFeet: 15, icon: '💄' },
-        { name: 'Mirror', cubicFeet: 3, icon: '🪞' },
-        { name: 'Mattress (Double)', cubicFeet: 20, icon: '🛏️' },
-        { name: 'Mattress (Single)', cubicFeet: 12, icon: '🛏️' }
-      ],
-      'children': [
-        { name: 'Crib/Cot', cubicFeet: 20, icon: '👶' },
-        { name: 'Toy Chest', cubicFeet: 10, icon: '🧸' },
-        { name: 'Bookshelf (Kids)', cubicFeet: 15, icon: '📚' },
-        { name: 'Desk (Kids)', cubicFeet: 12, icon: '✏️' },
-        { name: 'Chair (Kids)', cubicFeet: 4, icon: '🪑' },
-        { name: 'Clothes', cubicFeet: 8, icon: '👕' },
-        { name: 'Toys & Games', cubicFeet: 6, icon: '🎮' },
-        { name: 'Sports Equipment', cubicFeet: 8, icon: '⚽' }
-      ],
-      'office': [
-        { name: 'Desk', cubicFeet: 20, icon: '🖥️' },
-        { name: 'Office Chair', cubicFeet: 10, icon: '🪑' },
-        { name: 'Filing Cabinet', cubicFeet: 12, icon: '🗄️' },
-        { name: 'Computer/Monitor', cubicFeet: 8, icon: '💻' },
-        { name: 'Printer', cubicFeet: 4, icon: '🖨️' },
-        { name: 'Books/Documents', cubicFeet: 15, icon: '📚' },
-        { name: 'Office Supplies', cubicFeet: 3, icon: '📝' },
-        { name: 'Shelving Unit', cubicFeet: 18, icon: '📚' }
-      ],
-      'others': [
-        { name: 'Bicycle', cubicFeet: 8, icon: '🚲' },
-        { name: 'Lawn Mower', cubicFeet: 15, icon: '🌱' },
-        { name: 'Tools', cubicFeet: 10, icon: '🔧' },
-        { name: 'Garden Furniture', cubicFeet: 25, icon: '🌿' },
-        { name: 'Christmas Decorations', cubicFeet: 8, icon: '🎄' },
-        { name: 'Storage Boxes', cubicFeet: 5, icon: '📦' },
-        { name: 'Vacuum Cleaner', cubicFeet: 4, icon: '🧹' },
-        { name: 'Suitcases', cubicFeet: 6, icon: '🧳' }
+      "bedroom": [
+        { name: "Double Bed", cubicFeet: 40, icon: "🛏️" },
+        { name: "Wardrobe", cubicFeet: 45, icon: "👔" }
       ]
     };
 
-    // Track selected items
     let selectedItems = {};
-    for (const room in roomItems) {
-      selectedItems[room] = {};
+    let activeRoom = null;
+
+    function initCalculator() {
+      Object.keys(roomItems).forEach(room => {
+        selectedItems[room] = {};
+        roomItems[room].forEach(item => { selectedItems[room][item.name] = 0; });
+      });
+      document.querySelectorAll('.room-tab-button').forEach(tab => {
+        tab.addEventListener('click', function() { showRoom(this.dataset.room); });
+      });
+      showRoom('living-room');
+      calculateStorage();
+    }
+
+    function showRoom(room) {
+      document.querySelectorAll('.room-tab-button').forEach(tab => tab.classList.remove('active'));
+      document.querySelector(`[data-room="${room}"]`).classList.add('active');
+      activeRoom = room;
+
+      const contentArea = document.getElementById('contentArea');
+      contentArea.innerHTML = `<div class="items-section">
+        <div class="items-title">Items to store</div>
+        <div class="items-subtitle">${room}</div>
+        <div class="items-grid" id="itemsGrid"></div>
+      </div>`;
+
+      const itemsGrid = document.getElementById('itemsGrid');
       roomItems[room].forEach(item => {
-        selectedItems[room][item.name] = 0;
+        const div = document.createElement('div');
+        const quantity = selectedItems[room][item.name];
+        div.className = `item-card ${quantity > 0 ? 'selected' : ''}`;
+        div.innerHTML = `
+          <div class="item-icon">${item.icon}</div>
+          <div class="item-name">${item.name}</div>
+          <div class="item-details">${item.cubicFeet} cubic feet each</div>
+          <div class="item-controls">
+            ${quantity > 0 ? `
+              <button class="quantity-button" onclick="changeQuantity('${room}', '${item.name}', -1)">−</button>
+              <div class="quantity-display">${quantity}</div>
+              <button class="quantity-button" onclick="changeQuantity('${room}', '${item.name}', 1)">+</button>
+            ` : `<button class="add-button" onclick="changeQuantity('${room}', '${item.name}', 1)">Add</button>`}
+          </div>`;
+        itemsGrid.appendChild(div);
       });
     }
 
-    // Initialize tabs
-    const tabsContainer = document.getElementById("tabs");
-    Object.keys(roomItems).forEach((room, index) => {
-      const tab = document.createElement("button");
-      tab.className = "tab" + (index === 0 ? " active" : "");
-      tab.textContent = room.replace("-", " ").toUpperCase();
-      tab.onclick = () => showRoom(room);
-      tabsContainer.appendChild(tab);
-    });
-
-    const contentArea = document.getElementById("contentArea");
-
-    function showRoom(room) {
-      document.querySelectorAll(".tab").forEach(tab => tab.classList.remove("active"));
-      [...document.querySelectorAll(".tab")].find(tab => tab.textContent === room.replace("-", " ").toUpperCase()).classList.add("active");
-
-      contentArea.innerHTML = `
-        <div class="items-grid">
-          ${roomItems[room].map(item => `
-            <div class="item-card">
-              <div class="item-icon">${item.icon}</div>
-              <div class="item-name">${item.name}</div>
-              <div class="item-details">${item.cubicFeet} cu ft</div>
-              <div class="item-controls">
-                <button class="quantity-button" onclick="updateQuantity('${room}','${item.name}',-1)">-</button>
-                <div class="quantity-display" id="qty-${room}-${item.name.replace(/\s+/g,'-')}">
-                  ${selectedItems[room][item.name]}
-                </div>
-                <button class="quantity-button" onclick="updateQuantity('${room}','${item.name}',1)">+</button>
-              </div>
-            </div>
-          `).join('')}
-        </div>
-      `;
-    }
-
-    // Default room
-    showRoom("living-room");
-
-    // Update item quantity
-    function updateQuantity(room, itemName, change) {
+    function changeQuantity(room, itemName, change) {
       selectedItems[room][itemName] = Math.max(0, selectedItems[room][itemName] + change);
-      document.getElementById(`qty-${room}-${itemName.replace(/\s+/g, '-')}`).textContent =
-        selectedItems[room][itemName];
+      if (activeRoom === room) showRoom(room);
+      updateTabIndicators();
+      calculateStorage();
     }
 
-    // Calculate storage
+    function updateTabIndicators() {
+      Object.keys(roomItems).forEach(room => {
+        const countElement = document.getElementById(`count-${room}`);
+        let roomItemCount = Object.values(selectedItems[room]).reduce((a, b) => a + b, 0);
+        countElement.textContent = `Added: ${roomItemCount} item${roomItemCount !== 1 ? 's' : ''}`;
+      });
+    }
+
     function calculateStorage() {
-      let totalVolume = 0;
-      for (const room in selectedItems) {
-        for (const item in selectedItems[room]) {
-          if (selectedItems[room][item] > 0) {
-            const itemDef = roomItems[room].find(i => i.name === item);
-            totalVolume += selectedItems[room][item] * itemDef.cubicFeet;
-          }
-        }
-      }
+      let totalCubicFeet = 0;
+      Object.keys(selectedItems).forEach(room => {
+        Object.keys(selectedItems[room]).forEach(itemName => {
+          totalCubicFeet += roomItems[room].find(i => i.name === itemName).cubicFeet * selectedItems[room][itemName];
+        });
+      });
 
-      // Add 20% buffer internally
-      const bufferedVolume = totalVolume * 1.2;
-      const containersNeeded = Math.ceil(bufferedVolume / 250);
+      // Apply new calculation logic
+      const bufferedVolume = totalCubicFeet * 1.2;
+      const containers = Math.ceil(bufferedVolume / 250);
 
-      document.getElementById("results").innerHTML = `
-        <div class="result-card">
-          <h3>Total Volume</h3>
-          <p>${totalVolume} cu ft</p>
-        </div>
-        <div class="result-card">
-          <h3>Recommended Containers</h3>
-          <p>${containersNeeded} container(s)</p>
-        </div>
-      `;
+      document.getElementById('storageSize').textContent = containers;
+      document.getElementById('storagePrice').textContent = "Container(s)";
+      document.getElementById('storageDescription').textContent =
+        containers > 0 ? `You need ${containers} container(s)` : "Add items to see recommendation";
     }
 
-    // Reset calculator
     function resetCalculator() {
-      for (const room in selectedItems) {
-        for (const item in selectedItems[room]) {
-          selectedItems[room][item] = 0;
-        }
-      }
-      document.getElementById("results").innerHTML = "";
-      showRoom("living-room");
+      Object.keys(selectedItems).forEach(room => {
+        Object.keys(selectedItems[room]).forEach(item => selectedItems[room][item] = 0);
+      });
+      showRoom(activeRoom);
+      updateTabIndicators();
+      calculateStorage();
     }
+
+    window.onload = initCalculator;
   </script>
 </body>
 </html>
