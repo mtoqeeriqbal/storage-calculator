@@ -1,709 +1,762 @@
 <style>
-    
+    .container {
+
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .header-section {
+        text-align: center;
+        margin-bottom: 40px;
+    }
+
+    .header-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #1a202c;
+        margin-bottom: 12px;
+    }
+
+    .header-subtitle {
+        font-size: 1.1rem;
+        color: #64748b;
+    }
+
+    /* Room Tabs */
+    .room-tabs-section {
+        margin-bottom: 30px;
+        position: relative;
+    }
+
+    .room-tabs-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #1a202c;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    .room-tabs-wrapper {
+        display: flex;
+        gap: 12px;
+        justify-content: center;
+        flex-wrap: wrap;
+        padding: 0 10px;
+    }
+
+    .room-tab-button {
+        background: white;
+        border: 2px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 16px 24px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-weight: 600;
+        color: #64748b;
+        position: relative;
+        min-width: 140px;
+        text-align: center;
+        font-family: inherit;
+        font-size: inherit;
+    }
+
+    .room-tab-button:hover {
+        border-color: #FEDD58;
+        color: #1a202c;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(254, 221, 88, 0.25);
+        background: #fff9e6;
+    }
+
+    .room-tab-button.active {
+        background: #FEDD58;
+        border-color: #FEDD58;
+        color: #1a202c;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(254, 221, 88, 0.35);
+    }
+
+    .room-tab-icon {
+        font-size: 1.5rem;
+        margin-bottom: 8px;
+        display: block;
+    }
+
+    .room-tab-text {
+        display: block;
+    }
+
+    .room-tab-count {
+        font-size: 0.75rem;
+        opacity: 0.8;
+        font-weight: 400;
+        margin-top: 4px;
+        display: block;
+    }
+
+    .item-indicator {
+        position: absolute;
+        top: -6px;
+        right: -6px;
+        width: 20px;
+        height: 20px;
+        background: #FEDD58;
+        border: 2px solid white;
+        border-radius: 50%;
+        font-size: 0.75rem;
+        color: #1a202c;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+    }
+
+    /* Content Area */
+    .content-area {
+        margin-bottom: 30px;
+    }
+
+    .items-section {
+        display: block;
+    }
+
+    .items-title {
+        font-size: 1.8rem;
+        font-weight: 600;
+        color: #1a202c;
+        margin-bottom: 8px;
+        text-align: center;
+    }
+
+    .items-subtitle {
+        color: #FEDD58;
+        font-size: 1.1rem;
+        font-weight: 600;
+        text-align: center;
+        margin-bottom: 30px;
+        background: #1a202c;
+        padding: 8px 24px;
+        border-radius: 20px;
+        display: inline-block;
+        position: relative;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    .items-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 16px;
+        margin-bottom: 40px;
+    }
+
+    .item-card {
+        background: white;
+        border: 2px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 16px;
+        transition: all 0.3s ease;
+        position: relative;
+    }
+
+    .item-card:hover {
+        border-color: #FEDD58;
+        transform: translateY(-4px);
+        box-shadow: 0 8px 25px rgba(254, 221, 88, 0.25);
+    }
+
+    .item-card.selected {
+        border-color: #FEDD58;
+        background: #fff9e6;
+        box-shadow: 0 4px 15px rgba(254, 221, 88, 0.2);
+    }
+
+    .item-icon {
+        width: 36px;
+        height: 36px;
+        margin: 0 auto 12px;
+        font-size: 1.6rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #64748b;
+    }
+
+    .item-card.selected .item-icon {
+        color: #FEDD58;
+    }
+
+    .item-name {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #1a202c;
+        margin-bottom: 6px;
+        text-align: center;
+    }
+
+    .item-details {
+        font-size: 0.8rem;
+        color: #64748b;
+        text-align: center;
+        margin-bottom: 12px;
+    }
+
+    .item-controls {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+    }
+
+    .quantity-button {
+        width: 36px;
+        height: 36px;
+        border: 2px solid #e2e8f0;
+        background: white;
+        border-radius: 50%;
+        cursor: pointer;
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: #64748b;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s ease;
+        font-family: inherit;
+    }
+
+    .quantity-button:hover:not(:disabled) {
+        border-color: #FEDD58;
+        color: #FEDD58;
+        transform: scale(1.1);
+    }
+
+    .quantity-button:disabled {
+        opacity: 0.3;
+        cursor: not-allowed;
+    }
+
+    .quantity-display {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: #1a202c;
+        min-width: 24px;
+        text-align: center;
+    }
+
+    .add-button {
+        background: #FEDD58;
+        color: #1a202c;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        font-size: 0.9rem;
+        font-family: inherit;
+    }
+
+    .add-button:hover {
+        background: #fdd835;
+        transform: scale(1.05);
+    }
+
+
+
+    .results-left {
+        text-align: center;
+        padding: 20px;
+        background: #fff9e6;
+        border-radius: 12px;
+        border: 2px solid #FEDD58;
+    }
+
+    .results-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #64748b;
+        margin-bottom: 12px;
+    }
+
+    .storage-size {
+        font-size: 2.8rem;
+        font-weight: 700;
+        color: #1a202c;
+        margin: 8px 0;
+        line-height: 1;
+    }
+
+    .storage-price {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: #FEDD58;
+        background: #1a202c;
+        padding: 8px 16px;
+        border-radius: 20px;
+        display: inline-block;
+        margin-top: 12px;
+    }
+
+    .results-right {
+        padding: 10px 0;
+    }
+
+    .storage-description {
+        color: #1a202c;
+        margin-bottom: 20px;
+        line-height: 1.5;
+        font-size: 1rem;
+        font-weight: 600;
+    }
+
+    .storage-uses {
+        text-align: left;
+    }
+
+    .storage-uses-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .storage-uses-item {
+        margin-bottom: 8px;
+        padding-left: 20px;
+        position: relative;
+        color: #64748b;
+        font-size: 0.95rem;
+        line-height: 1.4;
+    }
+
+    .storage-uses-item::before {
+        content: '•';
+        color: #FEDD58;
+        font-weight: bold;
+        position: absolute;
+        left: 0;
+        font-size: 1.2rem;
+    }
+
+    .reset-button {
+        background: #f8fafc;
+        color: #64748b;
+        border: 2px solid #e2e8f0;
+        padding: 10px 20px;
+        border-radius: 20px;
+        cursor: pointer;
+        font-weight: 600;
+        margin-top: 20px;
+        transition: all 0.2s ease;
+        width: 100%;
+        font-size: 0.9rem;
+        grid-column: 1 / -1;
+        font-family: inherit;
+    }
+
+    .reset-button:hover {
+        background: #e2e8f0;
+        border-color: #cbd5e1;
+        color: #475569;
+    }
+
+    .welcome-message {
+        text-align: center;
+        color: #64748b;
+        padding: 60px 20px;
+        background: white;
+        border-radius: 16px;
+        border: 2px dashed #e2e8f0;
+    }
+
+    .welcome-text {
+        font-size: 1.2rem;
+        margin: 0;
+    }
+
+    /* Mobile Styles */
+    @media (max-width: 768px) {
         .container {
-           
-            margin: 0 auto;
-            padding: 20px;
+            padding: 10px;
         }
 
         .header-section {
-            text-align: center;
-            margin-bottom: 40px;
+            margin-bottom: 25px;
         }
 
         .header-title {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: #1a202c;
-            margin-bottom: 12px;
+            font-size: 1.8rem;
+            margin-bottom: 8px;
         }
 
         .header-subtitle {
-            font-size: 1.1rem;
-            color: #64748b;
-        }
-
-        /* Room Tabs */
-        .room-tabs-section {
-            margin-bottom: 30px;
-            position: relative;
-        }
-
-        .room-tabs-title {
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: #1a202c;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .room-tabs-wrapper {
-            display: flex;
-            gap: 12px;
-            justify-content: center;
-            flex-wrap: wrap;
+            font-size: 1rem;
             padding: 0 10px;
         }
 
+        .room-tabs-section {
+            margin-bottom: 20px;
+        }
+
+        .room-tabs-title {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+        }
+
+        .room-tabs-wrapper {
+            overflow-x: auto;
+            flex-wrap: nowrap;
+            justify-content: flex-start;
+            padding: 0 10px;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            gap: 8px;
+        }
+
+        .room-tabs-wrapper::-webkit-scrollbar {
+            display: none;
+        }
+
         .room-tab-button {
-            background: white;
-            border: 2px solid #e2e8f0;
-            border-radius: 12px;
-            padding: 16px 24px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: 600;
-            color: #64748b;
-            position: relative;
-            min-width: 140px;
-            text-align: center;
-            font-family: inherit;
-            font-size: inherit;
-        }
-
-        .room-tab-button:hover {
-            border-color: #FEDD58;
-            color: #1a202c;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(254, 221, 88, 0.25);
-            background: #fff9e6;
-        }
-
-        .room-tab-button.active {
-            background: #FEDD58;
-            border-color: #FEDD58;
-            color: #1a202c;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(254, 221, 88, 0.35);
+            flex-shrink: 0;
+            min-width: 110px;
+            padding: 12px 16px;
         }
 
         .room-tab-icon {
-            font-size: 1.5rem;
-            margin-bottom: 8px;
-            display: block;
-        }
-
-        .room-tab-text {
-            display: block;
+            font-size: 1.3rem;
+            margin-bottom: 6px;
         }
 
         .room-tab-count {
-            font-size: 0.75rem;
-            opacity: 0.8;
-            font-weight: 400;
-            margin-top: 4px;
-            display: block;
-        }
-
-        .item-indicator {
-            position: absolute;
-            top: -6px;
-            right: -6px;
-            width: 20px;
-            height: 20px;
-            background: #FEDD58;
-            border: 2px solid white;
-            border-radius: 50%;
-            font-size: 0.75rem;
-            color: #1a202c;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-        }
-
-        /* Content Area */
-        .content-area {
-            margin-bottom: 30px;
-        }
-
-        .items-section {
-            display: block;
+            font-size: 0.7rem;
+            margin-top: 2px;
         }
 
         .items-title {
-            font-size: 1.8rem;
-            font-weight: 600;
-            color: #1a202c;
-            margin-bottom: 8px;
-            text-align: center;
+            font-size: 1.5rem;
+            margin-bottom: 6px;
         }
 
         .items-subtitle {
-            color: #FEDD58;
-            font-size: 1.1rem;
-            font-weight: 600;
-            text-align: center;
-            margin-bottom: 30px;
-            background: #1a202c;
-            padding: 8px 24px;
-            border-radius: 20px;
-            display: inline-block;
-            position: relative;
-            left: 50%;
-            transform: translateX(-50%);
+            font-size: 1rem;
+            padding: 6px 18px;
+            margin-bottom: 20px;
         }
 
         .items-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 16px;
-            margin-bottom: 40px;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 12px;
+            margin-bottom: 30px;
         }
 
         .item-card {
-            background: white;
-            border: 2px solid #e2e8f0;
-            border-radius: 12px;
-            padding: 16px;
-            transition: all 0.3s ease;
-            position: relative;
-        }
-
-        .item-card:hover {
-            border-color: #FEDD58;
-            transform: translateY(-4px);
-            box-shadow: 0 8px 25px rgba(254, 221, 88, 0.25);
-        }
-
-        .item-card.selected {
-            border-color: #FEDD58;
-            background: #fff9e6;
-            box-shadow: 0 4px 15px rgba(254, 221, 88, 0.2);
+            padding: 12px;
         }
 
         .item-icon {
-            width: 36px;
-            height: 36px;
-            margin: 0 auto 12px;
-            font-size: 1.6rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #64748b;
-        }
-
-        .item-card.selected .item-icon {
-            color: #FEDD58;
+            width: 32px;
+            height: 32px;
+            font-size: 1.4rem;
+            margin-bottom: 8px;
         }
 
         .item-name {
-            font-size: 1rem;
-            font-weight: 600;
-            color: #1a202c;
-            margin-bottom: 6px;
-            text-align: center;
+            font-size: 0.9rem;
+            margin-bottom: 4px;
         }
 
         .item-details {
-            font-size: 0.8rem;
-            color: #64748b;
-            text-align: center;
-            margin-bottom: 12px;
+            font-size: 0.75rem;
+            margin-bottom: 10px;
         }
 
         .item-controls {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
+            gap: 10px;
         }
 
         .quantity-button {
-            width: 36px;
-            height: 36px;
-            border: 2px solid #e2e8f0;
-            background: white;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: #64748b;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s ease;
-            font-family: inherit;
-        }
-
-        .quantity-button:hover:not(:disabled) {
-            border-color: #FEDD58;
-            color: #FEDD58;
-            transform: scale(1.1);
-        }
-
-        .quantity-button:disabled {
-            opacity: 0.3;
-            cursor: not-allowed;
+            width: 32px;
+            height: 32px;
+            font-size: 1.1rem;
         }
 
         .quantity-display {
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: #1a202c;
-            min-width: 24px;
-            text-align: center;
+            font-size: 1.1rem;
+            min-width: 20px;
         }
 
         .add-button {
-            background: #FEDD58;
-            color: #1a202c;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            font-size: 0.9rem;
-            font-family: inherit;
+            padding: 6px 14px;
+            font-size: 0.85rem;
         }
 
-        .add-button:hover {
-            background: #fdd835;
-            transform: scale(1.05);
+        .item-indicator {
+            width: 18px;
+            height: 18px;
+            font-size: 0.7rem;
+            top: -5px;
+            right: -5px;
         }
 
 
 
         .results-left {
-            text-align: center;
-            padding: 20px;
-            background: #fff9e6;
-            border-radius: 12px;
-            border: 2px solid #FEDD58;
+            padding: 16px;
         }
 
         .results-title {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: #64748b;
-            margin-bottom: 12px;
+            font-size: 1rem;
+            margin-bottom: 10px;
         }
 
         .storage-size {
-            font-size: 2.8rem;
-            font-weight: 700;
-            color: #1a202c;
-            margin: 8px 0;
-            line-height: 1;
+            font-size: 2.2rem;
         }
 
         .storage-price {
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: #FEDD58;
-            background: #1a202c;
-            padding: 8px 16px;
-            border-radius: 20px;
-            display: inline-block;
-            margin-top: 12px;
+            font-size: 1.1rem;
+            padding: 6px 14px;
+            margin-top: 10px;
         }
 
         .results-right {
-            padding: 10px 0;
+            padding: 5px 0;
         }
 
         .storage-description {
-            color: #1a202c;
-            margin-bottom: 20px;
-            line-height: 1.5;
-            font-size: 1rem;
-            font-weight: 600;
-        }
-
-        .storage-uses {
-            text-align: left;
-        }
-
-        .storage-uses-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
+            font-size: 0.95rem;
+            margin-bottom: 15px;
         }
 
         .storage-uses-item {
-            margin-bottom: 8px;
-            padding-left: 20px;
-            position: relative;
-            color: #64748b;
-            font-size: 0.95rem;
-            line-height: 1.4;
-        }
-
-        .storage-uses-item::before {
-            content: '•';
-            color: #FEDD58;
-            font-weight: bold;
-            position: absolute;
-            left: 0;
-            font-size: 1.2rem;
+            font-size: 0.9rem;
+            margin-bottom: 6px;
+            padding-left: 18px;
+            line-height: 1.3;
         }
 
         .reset-button {
-            background: #f8fafc;
-            color: #64748b;
-            border: 2px solid #e2e8f0;
-            padding: 10px 20px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-weight: 600;
-            margin-top: 20px;
-            transition: all 0.2s ease;
-            width: 100%;
+            grid-column: 1;
+            margin-top: 15px;
+            padding: 12px 20px;
             font-size: 0.9rem;
-            grid-column: 1 / -1;
-            font-family: inherit;
-        }
-
-        .reset-button:hover {
-            background: #e2e8f0;
-            border-color: #cbd5e1;
-            color: #475569;
         }
 
         .welcome-message {
-            text-align: center;
-            color: #64748b;
-            padding: 60px 20px;
-            background: white;
-            border-radius: 16px;
-            border: 2px dashed #e2e8f0;
+            padding: 40px 15px;
         }
 
         .welcome-text {
+            font-size: 1.1rem;
+        }
+
+        /* Touch-friendly hover states for mobile */
+        .room-tab-button:hover {
+            transform: none;
+            box-shadow: none;
+        }
+
+        .item-card:hover {
+            transform: none;
+            box-shadow: 0 2px 8px rgba(254, 221, 88, 0.2);
+        }
+
+        .quantity-button:hover:not(:disabled) {
+            transform: none;
+        }
+
+        .add-button:hover {
+            transform: none;
+        }
+    }
+
+    /* Very small screens */
+    @media (max-width: 480px) {
+        .container {
+            padding: 8px;
+        }
+
+        .header-title {
+            font-size: 1.6rem;
+        }
+
+        .header-subtitle {
+            font-size: 0.95rem;
+        }
+
+        .room-tab-button {
+            min-width: 100px;
+            padding: 10px 12px;
+            font-size: 0.85rem;
+        }
+
+        .room-tab-icon {
             font-size: 1.2rem;
-            margin: 0;
+            margin-bottom: 4px;
         }
 
-        /* Mobile Styles */
-        @media (max-width: 768px) {
-            .container {
-                padding: 10px;
-            }
-
-            .header-section {
-                margin-bottom: 25px;
-            }
-
-            .header-title {
-                font-size: 1.8rem;
-                margin-bottom: 8px;
-            }
-
-            .header-subtitle {
-                font-size: 1rem;
-                padding: 0 10px;
-            }
-
-            .room-tabs-section {
-                margin-bottom: 20px;
-            }
-
-            .room-tabs-title {
-                font-size: 1.3rem;
-                margin-bottom: 15px;
-            }
-
-            .room-tabs-wrapper {
-                overflow-x: auto;
-                flex-wrap: nowrap;
-                justify-content: flex-start;
-                padding: 0 10px;
-                scrollbar-width: none;
-                -ms-overflow-style: none;
-                gap: 8px;
-            }
-
-            .room-tabs-wrapper::-webkit-scrollbar {
-                display: none;
-            }
-
-            .room-tab-button {
-                flex-shrink: 0;
-                min-width: 110px;
-                padding: 12px 16px;
-            }
-
-            .room-tab-icon {
-                font-size: 1.3rem;
-                margin-bottom: 6px;
-            }
-
-            .room-tab-count {
-                font-size: 0.7rem;
-                margin-top: 2px;
-            }
-
-            .items-title {
-                font-size: 1.5rem;
-                margin-bottom: 6px;
-            }
-
-            .items-subtitle {
-                font-size: 1rem;
-                padding: 6px 18px;
-                margin-bottom: 20px;
-            }
-
-            .items-grid {
-                grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-                gap: 12px;
-                margin-bottom: 30px;
-            }
-
-            .item-card {
-                padding: 12px;
-            }
-
-            .item-icon {
-                width: 32px;
-                height: 32px;
-                font-size: 1.4rem;
-                margin-bottom: 8px;
-            }
-
-            .item-name {
-                font-size: 0.9rem;
-                margin-bottom: 4px;
-            }
-
-            .item-details {
-                font-size: 0.75rem;
-                margin-bottom: 10px;
-            }
-
-            .item-controls {
-                gap: 10px;
-            }
-
-            .quantity-button {
-                width: 32px;
-                height: 32px;
-                font-size: 1.1rem;
-            }
-
-            .quantity-display {
-                font-size: 1.1rem;
-                min-width: 20px;
-            }
-
-            .add-button {
-                padding: 6px 14px;
-                font-size: 0.85rem;
-            }
-
-            .item-indicator {
-                width: 18px;
-                height: 18px;
-                font-size: 0.7rem;
-                top: -5px;
-                right: -5px;
-            }
-
-
-
-            .results-left {
-                padding: 16px;
-            }
-
-            .results-title {
-                font-size: 1rem;
-                margin-bottom: 10px;
-            }
-
-            .storage-size {
-                font-size: 2.2rem;
-            }
-
-            .storage-price {
-                font-size: 1.1rem;
-                padding: 6px 14px;
-                margin-top: 10px;
-            }
-
-            .results-right {
-                padding: 5px 0;
-            }
-
-            .storage-description {
-                font-size: 0.95rem;
-                margin-bottom: 15px;
-            }
-
-            .storage-uses-item {
-                font-size: 0.9rem;
-                margin-bottom: 6px;
-                padding-left: 18px;
-                line-height: 1.3;
-            }
-
-            .reset-button {
-                grid-column: 1;
-                margin-top: 15px;
-                padding: 12px 20px;
-                font-size: 0.9rem;
-            }
-
-            .welcome-message {
-                padding: 40px 15px;
-            }
-
-            .welcome-text {
-                font-size: 1.1rem;
-            }
-
-            /* Touch-friendly hover states for mobile */
-            .room-tab-button:hover {
-                transform: none;
-                box-shadow: none;
-            }
-
-            .item-card:hover {
-                transform: none;
-                box-shadow: 0 2px 8px rgba(254, 221, 88, 0.2);
-            }
-
-            .quantity-button:hover:not(:disabled) {
-                transform: none;
-            }
-
-            .add-button:hover {
-                transform: none;
-            }
+        .room-tab-count {
+            font-size: 0.65rem;
         }
 
-        /* Very small screens */
-        @media (max-width: 480px) {
-            .container {
-                padding: 8px;
-            }
-
-            .header-title {
-                font-size: 1.6rem;
-            }
-
-            .header-subtitle {
-                font-size: 0.95rem;
-            }
-
-            .room-tab-button {
-                min-width: 100px;
-                padding: 10px 12px;
-                font-size: 0.85rem;
-            }
-
-            .room-tab-icon {
-                font-size: 1.2rem;
-                margin-bottom: 4px;
-            }
-
-            .room-tab-count {
-                font-size: 0.65rem;
-            }
-
-            .items-grid {
-                grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-                gap: 10px;
-            }
-
-            .item-card {
-                padding: 10px;
-            }
-
-            .item-name {
-                font-size: 0.85rem;
-            }
-
-            .item-details {
-                font-size: 0.7rem;
-            }
-
-
-            .storage-size {
-                font-size: 2rem;
-            }
-
-            .storage-description {
-                font-size: 0.9rem;
-            }
-
-            .storage-uses-item {
-                font-size: 0.85rem;
-                line-height: 1.2;
-            }
+        .items-grid {
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 10px;
         }
 
-        /* Landscape orientation optimization */
-        @media (max-width: 768px) and (orientation: landscape) {
-            .room-tabs-wrapper {
-                padding: 0 5px;
-            }
-
-            .room-tab-button {
-                min-width: 90px;
-                padding: 8px 12px;
-            }
-
-            .room-tab-icon {
-                font-size: 1.1rem;
-                margin-bottom: 2px;
-            }
-
-            .room-tab-count {
-                font-size: 0.65rem;
-                margin-top: 1px;
-            }
-
-
-
-            .reset-button {
-                grid-column: 1 / -1;
-            }
+        .item-card {
+            padding: 10px;
         }
-    </style></div><div class="section-cal"><div class="padding-global"><div class="padding-section-medium"><div class="container"><div class="header-section"><div class="header-title">Storage Calculator</div><div class="spacer-xsmall"></div><div class="header-subtitle">Select items from different rooms and we&#x27;ll calculate the optimal storage space needed.</div></div><div class="room-tabs-section"><div class="room-tabs-title">Select a room</div><div id="roomTabs" class="room-tabs-wrapper"><a data-room="living-room" href="#" class="room-tab-button w-inline-block"><div class="room-tab-icon">🛋️</div><div class="room-tab-text">Living room</div><div id="count-living-room" class="room-tab-count">Added: 0 items</div></a><a data-room="kitchen" href="#" class="room-tab-button w-inline-block"><div class="room-tab-icon">🍽️</div><div class="room-tab-text">Kitchen &amp; dining</div><div id="count-kitchen" class="room-tab-count">Added: 0 items</div></a><a data-room="bedroom" href="#" class="room-tab-button w-inline-block"><div class="room-tab-icon">🛏️</div><div class="room-tab-text">Bedroom</div><div id="count-bedroom" class="room-tab-count">Added: 0 items</div></a><a data-room="children" href="#" class="room-tab-button w-inline-block"><div class="room-tab-icon">🧸</div><div class="room-tab-text">Children&#x27;s room</div><div id="count-children" class="room-tab-count">Added: 0 items</div></a><a data-room="office" href="#" class="room-tab-button w-inline-block"><div class="room-tab-icon">🏠</div><div class="room-tab-text">Home office</div><div id="count-office" class="room-tab-count">Added: 0 items</div></a><a data-room="others" href="#" class="room-tab-button w-inline-block"><div class="room-tab-icon">📦</div><div class="room-tab-text">Others</div><div id="count-others" class="room-tab-count">Added: 0 items</div></a></div></div><div id="contentArea" class="content-area"><div class="welcome-message"><div class="welcome-text">👆 Choose a room from above to start selecting items</div></div></div><div id="resultsPanel" class="results-panel"><div class="div-block-94"><div class="results-left"><div class="results-title">Recommended storage</div><div id="storageSize" class="storage-size">Boxes</div><div id="storagePrice" class="storage-price">from £2.50/week</div></div><div class="results-right"><div id="storageDescription" class="storage-description">Approx the size of a Large Moving Box<br/>Default Text</div><div id="storageUses" class="storage-uses"><ul role="list" class="storage-uses-list"><li class="storage-uses-item">Store a box full of books</li><li class="storage-uses-item">Store a box full of toys</li><li class="storage-uses-item">Store a box full of electrical equipment</li><li class="storage-uses-item">Store clothes or bed linen</li></ul></div></div></div><div class="max-width-small align-center"><a id="reset-cal" href="#" class="reset-button w-inline-block"><div>Reset All Items</div></a></div></div></div></div></div></div><div class="w-embed w-script"><script>
+
+        .item-name {
+            font-size: 0.85rem;
+        }
+
+        .item-details {
+            font-size: 0.7rem;
+        }
+
+
+        .storage-size {
+            font-size: 2rem;
+        }
+
+        .storage-description {
+            font-size: 0.9rem;
+        }
+
+        .storage-uses-item {
+            font-size: 0.85rem;
+            line-height: 1.2;
+        }
+    }
+
+    /* Landscape orientation optimization */
+    @media (max-width: 768px) and (orientation: landscape) {
+        .room-tabs-wrapper {
+            padding: 0 5px;
+        }
+
+        .room-tab-button {
+            min-width: 90px;
+            padding: 8px 12px;
+        }
+
+        .room-tab-icon {
+            font-size: 1.1rem;
+            margin-bottom: 2px;
+        }
+
+        .room-tab-count {
+            font-size: 0.65rem;
+            margin-top: 1px;
+        }
+
+
+
+        .reset-button {
+            grid-column: 1 / -1;
+        }
+    }
+</style>
+</div>
+<div class="section-cal">
+    <div class="padding-global">
+        <div class="padding-section-medium">
+            <div class="container">
+                <div class="header-section">
+                    <div class="header-title">Storage Calculator</div>
+                    <div class="spacer-xsmall"></div>
+                    <div class="header-subtitle">Select items from different rooms and we&#x27;ll calculate the optimal
+                        storage space needed.</div>
+                </div>
+                <div class="room-tabs-section">
+                    <div class="room-tabs-title">Select a room</div>
+                    <div id="roomTabs" class="room-tabs-wrapper"><a data-room="living-room" href="#"
+                            class="room-tab-button w-inline-block">
+                            <div class="room-tab-icon">🛋️</div>
+                            <div class="room-tab-text">Living room</div>
+                            <div id="count-living-room" class="room-tab-count">Added: 0 items</div>
+                        </a><a data-room="kitchen" href="#" class="room-tab-button w-inline-block">
+                            <div class="room-tab-icon">🍽️</div>
+                            <div class="room-tab-text">Kitchen &amp; dining</div>
+                            <div id="count-kitchen" class="room-tab-count">Added: 0 items</div>
+                        </a><a data-room="bedroom" href="#" class="room-tab-button w-inline-block">
+                            <div class="room-tab-icon">🛏️</div>
+                            <div class="room-tab-text">Bedroom</div>
+                            <div id="count-bedroom" class="room-tab-count">Added: 0 items</div>
+                        </a><a data-room="children" href="#" class="room-tab-button w-inline-block">
+                            <div class="room-tab-icon">🧸</div>
+                            <div class="room-tab-text">Children&#x27;s room</div>
+                            <div id="count-children" class="room-tab-count">Added: 0 items</div>
+                        </a><a data-room="office" href="#" class="room-tab-button w-inline-block">
+                            <div class="room-tab-icon">🏠</div>
+                            <div class="room-tab-text">Home office</div>
+                            <div id="count-office" class="room-tab-count">Added: 0 items</div>
+                        </a><a data-room="others" href="#" class="room-tab-button w-inline-block">
+                            <div class="room-tab-icon">📦</div>
+                            <div class="room-tab-text">Others</div>
+                            <div id="count-others" class="room-tab-count">Added: 0 items</div>
+                        </a></div>
+                </div>
+                <div id="contentArea" class="content-area">
+                    <div class="welcome-message">
+                        <div class="welcome-text">👆 Choose a room from above to start selecting items</div>
+                    </div>
+                </div>
+                <div id="resultsPanel" class="results-panel">
+                    <div class="div-block-94">
+                        <div class="results-left">
+                            <div class="results-title">Recommended storage</div>
+                            <div id="storageSize" class="storage-size">Boxes</div>
+                            <div id="storagePrice" class="storage-price">from £2.50/week</div>
+                        </div>
+                        <div class="results-right">
+                            <div id="storageDescription" class="storage-description">Approx the size of a Large Moving
+                                Box<br />Default Text</div>
+                            <div id="storageUses" class="storage-uses">
+                                <ul role="list" class="storage-uses-list">
+                                    <li class="storage-uses-item">Store a box full of books</li>
+                                    <li class="storage-uses-item">Store a box full of toys</li>
+                                    <li class="storage-uses-item">Store a box full of electrical equipment</li>
+                                    <li class="storage-uses-item">Store clothes or bed linen</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="max-width-small align-center"><a id="reset-cal" href="#"
+                            class="reset-button w-inline-block">
+                            <div>Reset All Items</div>
+                        </a></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="w-embed w-script">
+    <script>
         // Updated storage data with new sizes and pricing
         const storageSizes = [
             {
-                size: 'Boxes',
-                maxCubicFeet: 20,
-                price: 'from £2.50/week',
-                description: '<strong>Approx the size of a Large Moving Box</strong><br>Store by the Box from £2.50/week',
-                uses: [
-                    'Store a box full of books',
-                    'Store a box full of toys', 
-                    'Store a box full of electrical equipment',
-                    'Store clothes or bed linen'
-                ]
-            },
-            {
-                size: '15 SqFt',
-                maxCubicFeet: 120,
-                price: 'from £10/week',
-                description: '<strong>Approx the size of a garden storage container</strong><br>Rent 15 sqft Storage Unit from £10/week',
-                uses: [
-                    'Perfect for decluttering items',
-                    'Store single furniture items or appliances',
-                    'Business use to store documents and boxes',
-                    'Students can store belongings during holiday'
-                ]
-            },
-            {
-                size: '35 SqFt',
-                maxCubicFeet: 280,
+                size: '1 Container',
+                containers: 1,
+                maxCubicFeet: 250,
                 price: 'from £20/week',
-                description: '<strong>Approximately the size of an average UK garden shed</strong><br>Rent 35 sqft Storage Unit from £20/week',
+                description: '<strong>1 x 35 SqFt Storage Container (250 cubic feet)</strong><br>Rent 1 Container from £20/week',
                 uses: [
                     'Contents of small studio flat',
                     'Student storage during holidays',
-                    'Business storage for long term storage of business documents in archive boxes',
+                    'Business storage for documents in archive boxes',
                     'Decluttering your home'
                 ]
             },
             {
-                size: '70 SqFt',
-                maxCubicFeet: 560,
-                price: 'from £30/week',
-                description: '<strong>About the size of a UK super market delivery van</strong><br>Rent 70 sqft Storage Unit from £30/week',
+                size: '2 Containers',
+                containers: 2,
+                maxCubicFeet: 500,
+                price: 'from £40/week',
+                description: '<strong>2 x 35 SqFt Storage Containers (500 cubic feet)</strong><br>Rent 2 Containers from £40/week',
                 uses: [
                     'Storing contents of a 1 bedroom apartment',
                     'Storing furniture from a Small Office relocation',
@@ -711,29 +764,44 @@
                 ]
             },
             {
-                size: '105 SqFt',
-                maxCubicFeet: 840,
-                price: 'from £45/week',
-                description: '<strong>Approximately the size of an average UK garage</strong><br>Rent 105 sqft Storage Unit from £45/week',
+                size: '3 Containers',
+                containers: 3,
+                maxCubicFeet: 750,
+                price: 'from £60/week',
+                description: '<strong>3 x 35 SqFt Storage Containers (750 cubic feet)</strong><br>Rent 3 Containers from £60/week',
                 uses: [
                     'Storing contents of small 2 bed flat',
                     'Storing furniture and household contents of a 2 bed apartment',
-                    'Business use as temporary storage for stock or office furniture during an office relocation'
+                    'Business use as temporary storage for stock or office furniture'
                 ]
             },
             {
-                size: '140+ SqFt',
-                maxCubicFeet: Infinity,
-                price: 'from £60/week',
-                description: '<strong>Large storage for substantial household contents</strong><br>Rent 140+ sqft Storage Unit from £60/week',
+                size: '4 Containers',
+                containers: 4,
+                maxCubicFeet: 1000,
+                price: 'from £80/week',
+                description: '<strong>4 x 35 SqFt Storage Containers (1000 cubic feet)</strong><br>Rent 4 Containers from £80/week',
                 uses: [
-                    'Complete household contents of 3+ bedroom house',
+                    'Complete household contents of 3 bedroom house',
+                    'Large business inventory storage',
+                    'Long-term storage for multiple households'
+                ]
+            },
+            {
+                size: '5+ Containers',
+                containers: 5,
+                maxCubicFeet: Infinity,
+                price: 'from £100/week',
+                description: '<strong>5+ x 35 SqFt Storage Containers (1250+ cubic feet)</strong><br>Rent 5+ Containers from £100/week',
+                uses: [
+                    'Complete household contents of 4+ bedroom house',
                     'Large business inventory storage',
                     'Long-term storage for multiple households',
                     'Commercial storage needs'
                 ]
             }
         ];
+
 
         // Room items with icons
         const roomItems = {
@@ -818,7 +886,7 @@
 
             // Add event listeners
             document.querySelectorAll('.room-tab-button').forEach(tab => {
-                tab.addEventListener('click', function() {
+                tab.addEventListener('click', function () {
                     const room = this.dataset.room;
                     showRoom(room);
                 });
@@ -838,12 +906,12 @@
 
             activeRoom = room;
             const contentArea = document.getElementById('contentArea');
-            const roomName = room === 'children' ? "Children's room" : 
-                            room === 'living-room' ? 'Living room' :
-                            room === 'kitchen' ? 'Kitchen & dining' :
-                            room === 'office' ? 'Home office' :
+            const roomName = room === 'children' ? "Children's room" :
+                room === 'living-room' ? 'Living room' :
+                    room === 'kitchen' ? 'Kitchen & dining' :
+                        room === 'office' ? 'Home office' :
                             room.charAt(0).toUpperCase() + room.slice(1);
-            
+
             contentArea.innerHTML = `
                 <div class="items-section">
                     <div class="items-title">Items to store from</div>
@@ -853,7 +921,7 @@
             `;
 
             const itemsGrid = document.getElementById('itemsGrid');
-            
+
             roomItems[room].forEach(item => {
                 const itemCard = createItemCard(room, item);
                 itemsGrid.appendChild(itemCard);
@@ -863,7 +931,7 @@
         function createItemCard(room, item) {
             const div = document.createElement('div');
             const quantity = selectedItems[room][item.name];
-            
+
             div.className = `item-card ${quantity > 0 ? 'selected' : ''}`;
             div.innerHTML = `
                 <div class="item-icon">${item.icon}</div>
@@ -885,7 +953,7 @@
                     `}
                 </div>
             `;
-            
+
             // Add item indicator if quantity > 0
             if (quantity > 0) {
                 const indicator = document.createElement('div');
@@ -893,18 +961,18 @@
                 indicator.textContent = quantity;
                 div.appendChild(indicator);
             }
-            
+
             return div;
         }
 
         function changeQuantity(room, itemName, change) {
             selectedItems[room][itemName] = Math.max(0, selectedItems[room][itemName] + change);
-            
+
             // Refresh the current room display
             if (activeRoom === room) {
                 showRoom(room);
             }
-            
+
             updateTabIndicators();
             calculateStorage();
         }
@@ -912,12 +980,12 @@
         function updateTabIndicators() {
             Object.keys(roomItems).forEach(room => {
                 const countElement = document.getElementById(`count-${room}`);
-                
+
                 let roomItemCount = 0;
                 Object.values(selectedItems[room]).forEach(qty => {
                     roomItemCount += qty;
                 });
-                
+
                 countElement.textContent = `Added: ${roomItemCount} item${roomItemCount === 1 ? '' : 's'}`;
             });
         }
@@ -925,7 +993,7 @@
         function calculateStorage() {
             let totalCubicFeet = 0;
             let totalItems = 0;
-            
+
             Object.keys(selectedItems).forEach(room => {
                 Object.keys(selectedItems[room]).forEach(itemName => {
                     const quantity = selectedItems[room][itemName];
@@ -938,17 +1006,32 @@
                     }
                 });
             });
-            
-            // Find recommended storage size
-            const recommendation = storageSizes.find(size => totalCubicFeet <= size.maxCubicFeet) || storageSizes[storageSizes.length - 1];
-            
+
+            // Calculate containers needed based on your requirements:
+            // 1. Add 20% buffer to total cubic feet
+            // 2. Divide by 250 cubic feet per container
+            // 3. Round up to nearest whole container
+            const totalWithBuffer = totalCubicFeet * 1.2; // Add 20% buffer
+            const containersNeeded = Math.ceil(totalWithBuffer / 250); // Each container = 250 cubic feet
+
+            // Find recommended storage size based on containers needed
+            let recommendation;
+            if (containersNeeded === 0) {
+                recommendation = storageSizes[0]; // Default to 1 container for empty selection
+            } else {
+                recommendation = storageSizes.find(size => containersNeeded <= size.containers) || storageSizes[storageSizes.length - 1];
+            }
+
             // Update results
             document.getElementById('storageSize').textContent = recommendation.size;
             document.getElementById('storagePrice').textContent = recommendation.price;
             document.getElementById('storageDescription').innerHTML = recommendation.description;
-            
+
             const usesContainer = document.getElementById('storageUses');
             usesContainer.innerHTML = `
+                <div style="margin-bottom: 10px; font-weight: bold; color: #2c5aa0;">
+                    Calculation: ${totalCubicFeet} cu ft + 20% buffer = ${Math.round(totalWithBuffer)} cu ft ÷ 250 = ${containersNeeded} container${containersNeeded === 1 ? '' : 's'}
+                </div>
                 <ul class="storage-uses-list">
                     ${recommendation.uses.map(use => `<li class="storage-uses-item">${use}</li>`).join('')}
                 </ul>
@@ -961,17 +1044,17 @@
                     selectedItems[room][itemName] = 0;
                 });
             });
-            
+
             document.querySelectorAll('.room-tab-button').forEach(tab => {
                 tab.classList.remove('active');
             });
-            
+
             document.getElementById('contentArea').innerHTML = `
                 <div class="welcome-message">
                     <div class="welcome-text">👆 Choose a room from above to start selecting items</div>
                 </div>
             `;
-            
+
             activeRoom = null;
             updateTabIndicators();
             calculateStorage();
@@ -982,12 +1065,12 @@
         if (document.readyState !== 'loading') {
             initCalculator();
         }
-        
-        
-        
-          // Attach click event
-        document.getElementById("reset-cal").addEventListener("click", function() {
-          resetCalculator();
+
+
+
+        // Attach click event
+        document.getElementById("reset-cal").addEventListener("click", function () {
+            resetCalculator();
         });
 
     </script>
