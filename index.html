@@ -1,133 +1,743 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Storage Calculator</title>
-  <style>
-    /* === Base Styles === */
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: #f8fafc; color: #1a202c; line-height: 1.6;
-    }
-    .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+<style>
+    
+        .container {
+           
+            margin: 0 auto;
+            padding: 20px;
+        }
 
-    /* === Header === */
-    .header-section { text-align: center; margin-bottom: 40px; }
-    .header-title { font-size: 2.5rem; font-weight: 700; margin-bottom: 12px; }
-    .header-subtitle { font-size: 1.1rem; color: #64748b; }
+        .header-section {
+            text-align: center;
+            margin-bottom: 40px;
+        }
 
-    /* === Room Tabs === */
-    .room-tabs-section { margin-bottom: 30px; }
-    .room-tabs-title { font-size: 1.5rem; font-weight: 600; text-align: center; margin-bottom: 20px; }
-    .room-tabs-wrapper {
-      display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; padding: 0 10px;
-    }
-    .room-tab-button {
-      background: white; border: 2px solid #e2e8f0; border-radius: 12px;
-      padding: 16px 24px; cursor: pointer; transition: all 0.3s ease;
-      font-weight: 600; color: #64748b; min-width: 140px; text-align: center;
-    }
-    .room-tab-button:hover {
-      border-color: #FEDD58; color: #1a202c; transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(254, 221, 88, 0.25); background: #fff9e6;
-    }
-    .room-tab-button.active {
-      background: #FEDD58; border-color: #FEDD58; color: #1a202c;
-      box-shadow: 0 4px 12px rgba(254, 221, 88, 0.35);
-    }
-    .room-tab-count { font-size: 0.75rem; opacity: 0.8; margin-top: 4px; }
+        .header-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1a202c;
+            margin-bottom: 12px;
+        }
 
-    /* === Items === */
-    .items-title { font-size: 1.8rem; font-weight: 600; text-align: center; margin-bottom: 8px; }
-    .items-subtitle {
-      color: #FEDD58; font-size: 1.1rem; font-weight: 600;
-      text-align: center; margin-bottom: 30px; background: #1a202c;
-      padding: 8px 24px; border-radius: 20px; display: inline-block;
-      left: 50%; position: relative; transform: translateX(-50%);
-    }
-    .items-grid {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 16px; margin-bottom: 40px;
-    }
-    .item-card {
-      background: white; border: 2px solid #e2e8f0; border-radius: 12px;
-      padding: 16px; transition: all 0.3s ease;
-    }
-    .item-card:hover { border-color: #FEDD58; transform: translateY(-4px); }
-    .item-card.selected { border-color: #FEDD58; background: #fff9e6; }
-    .item-icon { width: 36px; height: 36px; margin: 0 auto 12px; font-size: 1.6rem; }
-    .item-name { font-weight: 600; text-align: center; }
-    .item-details { font-size: 0.8rem; color: #64748b; text-align: center; margin-bottom: 12px; }
-    .item-controls { display: flex; justify-content: center; gap: 12px; }
-    .quantity-button {
-      width: 36px; height: 36px; border: 2px solid #e2e8f0; border-radius: 50%;
-      font-size: 1.2rem; cursor: pointer; background: white;
-    }
-    .quantity-display { font-size: 1.2rem; font-weight: 600; }
-    .add-button {
-      background: #FEDD58; color: #1a202c; border: none; padding: 8px 16px;
-      border-radius: 20px; font-weight: 600; cursor: pointer;
-    }
+        .header-subtitle {
+            font-size: 1.1rem;
+            color: #64748b;
+        }
 
-    /* === Results === */
-    .results-panel {
-      background: white; border-radius: 16px; padding: 24px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-      border: 2px solid #e2e8f0; margin-bottom: 30px;
-      display: grid; grid-template-columns: 1fr 1fr; gap: 30px;
-    }
-    .results-left { text-align: center; padding: 20px; background: #fff9e6; border: 2px solid #FEDD58; border-radius: 12px; }
-    .storage-size { font-size: 2.8rem; font-weight: 700; margin: 8px 0; }
-    .storage-price { font-size: 1.2rem; font-weight: 600; color: #FEDD58; background: #1a202c; padding: 8px 16px; border-radius: 20px; display: inline-block; margin-top: 12px; }
-    .storage-description { font-weight: 600; margin-bottom: 20px; }
-    .reset-button {
-      background: #f8fafc; color: #64748b; border: 2px solid #e2e8f0;
-      padding: 10px 20px; border-radius: 20px; cursor: pointer; font-weight: 600;
-      grid-column: 1 / -1; margin-top: 20px;
-    }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <div class="header-section">
-      <div class="header-title">Storage Calculator</div>
-      <div class="header-subtitle">Select items and we'll calculate how many containers you need.</div>
-    </div>
+        /* Room Tabs */
+        .room-tabs-section {
+            margin-bottom: 30px;
+            position: relative;
+        }
 
-    <!-- Tabs -->
-    <div class="room-tabs-section">
-      <div class="room-tabs-title">Select a room</div>
-      <div class="room-tabs-wrapper" id="roomTabs">
-        <button class="room-tab-button" data-room="living-room">🛋️ Living Room <div id="count-living-room">Added: 0 items</div></button>
-        <button class="room-tab-button" data-room="kitchen">🍽️ Kitchen <div id="count-kitchen">Added: 0 items</div></button>
-        <button class="room-tab-button" data-room="bedroom">🛏️ Bedroom <div id="count-bedroom">Added: 0 items</div></button>
-      </div>
-    </div>
+        .room-tabs-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1a202c;
+            margin-bottom: 20px;
+            text-align: center;
+        }
 
-    <!-- Items Grid -->
-    <div class="content-area" id="contentArea">
-      <div class="welcome-message"><p>👆 Choose a room above to start selecting items</p></div>
-    </div>
+        .room-tabs-wrapper {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+            padding: 0 10px;
+        }
 
-    <!-- Results -->
-    <div class="results-panel" id="resultsPanel">
-      <div class="results-left">
-        <div class="results-title">Recommended Storage</div>
-        <div class="storage-size" id="storageSize">0</div>
-        <div class="storage-price" id="storagePrice">Container(s)</div>
-      </div>
-      <div class="results-right">
-        <div class="storage-description" id="storageDescription">Add items to see recommendation</div>
-      </div>
-      <button class="reset-button" onclick="resetCalculator()">Reset All Items</button>
-    </div>
-  </div>
+        .room-tab-button {
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 16px 24px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            color: #64748b;
+            position: relative;
+            min-width: 140px;
+            text-align: center;
+            font-family: inherit;
+            font-size: inherit;
+        }
 
-  <script>
-    const roomItems = {
-'living-room': [
+        .room-tab-button:hover {
+            border-color: #FEDD58;
+            color: #1a202c;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(254, 221, 88, 0.25);
+            background: #fff9e6;
+        }
+
+        .room-tab-button.active {
+            background: #FEDD58;
+            border-color: #FEDD58;
+            color: #1a202c;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(254, 221, 88, 0.35);
+        }
+
+        .room-tab-icon {
+            font-size: 1.5rem;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .room-tab-text {
+            display: block;
+        }
+
+        .room-tab-count {
+            font-size: 0.75rem;
+            opacity: 0.8;
+            font-weight: 400;
+            margin-top: 4px;
+            display: block;
+        }
+
+        .item-indicator {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            width: 20px;
+            height: 20px;
+            background: #FEDD58;
+            border: 2px solid white;
+            border-radius: 50%;
+            font-size: 0.75rem;
+            color: #1a202c;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        /* Content Area */
+        .content-area {
+            margin-bottom: 30px;
+        }
+
+        .items-section {
+            display: block;
+        }
+
+        .items-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #1a202c;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+
+        .items-subtitle {
+            color: #FEDD58;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 30px;
+            background: #1a202c;
+            padding: 8px 24px;
+            border-radius: 20px;
+            display: inline-block;
+            position: relative;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .items-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 40px;
+        }
+
+        .item-card {
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 16px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .item-card:hover {
+            border-color: #FEDD58;
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(254, 221, 88, 0.25);
+        }
+
+        .item-card.selected {
+            border-color: #FEDD58;
+            background: #fff9e6;
+            box-shadow: 0 4px 15px rgba(254, 221, 88, 0.2);
+        }
+
+        .item-icon {
+            width: 36px;
+            height: 36px;
+            margin: 0 auto 12px;
+            font-size: 1.6rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #64748b;
+        }
+
+        .item-card.selected .item-icon {
+            color: #FEDD58;
+        }
+
+        .item-name {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #1a202c;
+            margin-bottom: 6px;
+            text-align: center;
+        }
+
+        .item-details {
+            font-size: 0.8rem;
+            color: #64748b;
+            text-align: center;
+            margin-bottom: 12px;
+        }
+
+        .item-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .quantity-button {
+            width: 36px;
+            height: 36px;
+            border: 2px solid #e2e8f0;
+            background: white;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #64748b;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            font-family: inherit;
+        }
+
+        .quantity-button:hover:not(:disabled) {
+            border-color: #FEDD58;
+            color: #FEDD58;
+            transform: scale(1.1);
+        }
+
+        .quantity-button:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .quantity-display {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #1a202c;
+            min-width: 24px;
+            text-align: center;
+        }
+
+        .add-button {
+            background: #FEDD58;
+            color: #1a202c;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.9rem;
+            font-family: inherit;
+        }
+
+        .add-button:hover {
+            background: #fdd835;
+            transform: scale(1.05);
+        }
+
+
+
+        .results-left {
+            text-align: center;
+            padding: 20px;
+            background: #fff9e6;
+            border-radius: 12px;
+            border: 2px solid #FEDD58;
+        }
+
+        .results-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #64748b;
+            margin-bottom: 12px;
+        }
+
+        .storage-size {
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: #1a202c;
+            margin: 8px 0;
+            line-height: 1;
+        }
+
+        .storage-price {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #FEDD58;
+            background: #1a202c;
+            padding: 8px 16px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-top: 12px;
+        }
+
+        .results-right {
+            padding: 10px 0;
+        }
+
+        .storage-description {
+            color: #1a202c;
+            margin-bottom: 20px;
+            line-height: 1.5;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .storage-uses {
+            text-align: left;
+        }
+
+        .storage-uses-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .storage-uses-item {
+            margin-bottom: 8px;
+            padding-left: 20px;
+            position: relative;
+            color: #64748b;
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+
+        .storage-uses-item::before {
+            content: '•';
+            color: #FEDD58;
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+            font-size: 1.2rem;
+        }
+
+        .reset-button {
+            background: #f8fafc;
+            color: #64748b;
+            border: 2px solid #e2e8f0;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-top: 20px;
+            transition: all 0.2s ease;
+            width: 100%;
+            font-size: 0.9rem;
+            grid-column: 1 / -1;
+            font-family: inherit;
+        }
+
+        .reset-button:hover {
+            background: #e2e8f0;
+            border-color: #cbd5e1;
+            color: #475569;
+        }
+
+        .welcome-message {
+            text-align: center;
+            color: #64748b;
+            padding: 60px 20px;
+            background: white;
+            border-radius: 16px;
+            border: 2px dashed #e2e8f0;
+        }
+
+        .welcome-text {
+            font-size: 1.2rem;
+            margin: 0;
+        }
+
+        /* Mobile Styles */
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            .header-section {
+                margin-bottom: 25px;
+            }
+
+            .header-title {
+                font-size: 1.8rem;
+                margin-bottom: 8px;
+            }
+
+            .header-subtitle {
+                font-size: 1rem;
+                padding: 0 10px;
+            }
+
+            .room-tabs-section {
+                margin-bottom: 20px;
+            }
+
+            .room-tabs-title {
+                font-size: 1.3rem;
+                margin-bottom: 15px;
+            }
+
+            .room-tabs-wrapper {
+                overflow-x: auto;
+                flex-wrap: nowrap;
+                justify-content: flex-start;
+                padding: 0 10px;
+                scrollbar-width: none;
+                -ms-overflow-style: none;
+                gap: 8px;
+            }
+
+            .room-tabs-wrapper::-webkit-scrollbar {
+                display: none;
+            }
+
+            .room-tab-button {
+                flex-shrink: 0;
+                min-width: 110px;
+                padding: 12px 16px;
+            }
+
+            .room-tab-icon {
+                font-size: 1.3rem;
+                margin-bottom: 6px;
+            }
+
+            .room-tab-count {
+                font-size: 0.7rem;
+                margin-top: 2px;
+            }
+
+            .items-title {
+                font-size: 1.5rem;
+                margin-bottom: 6px;
+            }
+
+            .items-subtitle {
+                font-size: 1rem;
+                padding: 6px 18px;
+                margin-bottom: 20px;
+            }
+
+            .items-grid {
+                grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+                gap: 12px;
+                margin-bottom: 30px;
+            }
+
+            .item-card {
+                padding: 12px;
+            }
+
+            .item-icon {
+                width: 32px;
+                height: 32px;
+                font-size: 1.4rem;
+                margin-bottom: 8px;
+            }
+
+            .item-name {
+                font-size: 0.9rem;
+                margin-bottom: 4px;
+            }
+
+            .item-details {
+                font-size: 0.75rem;
+                margin-bottom: 10px;
+            }
+
+            .item-controls {
+                gap: 10px;
+            }
+
+            .quantity-button {
+                width: 32px;
+                height: 32px;
+                font-size: 1.1rem;
+            }
+
+            .quantity-display {
+                font-size: 1.1rem;
+                min-width: 20px;
+            }
+
+            .add-button {
+                padding: 6px 14px;
+                font-size: 0.85rem;
+            }
+
+            .item-indicator {
+                width: 18px;
+                height: 18px;
+                font-size: 0.7rem;
+                top: -5px;
+                right: -5px;
+            }
+
+
+
+            .results-left {
+                padding: 16px;
+            }
+
+            .results-title {
+                font-size: 1rem;
+                margin-bottom: 10px;
+            }
+
+            .storage-size {
+                font-size: 2.2rem;
+            }
+
+            .storage-price {
+                font-size: 1.1rem;
+                padding: 6px 14px;
+                margin-top: 10px;
+            }
+
+            .results-right {
+                padding: 5px 0;
+            }
+
+            .storage-description {
+                font-size: 0.95rem;
+                margin-bottom: 15px;
+            }
+
+            .storage-uses-item {
+                font-size: 0.9rem;
+                margin-bottom: 6px;
+                padding-left: 18px;
+                line-height: 1.3;
+            }
+
+            .reset-button {
+                grid-column: 1;
+                margin-top: 15px;
+                padding: 12px 20px;
+                font-size: 0.9rem;
+            }
+
+            .welcome-message {
+                padding: 40px 15px;
+            }
+
+            .welcome-text {
+                font-size: 1.1rem;
+            }
+
+            /* Touch-friendly hover states for mobile */
+            .room-tab-button:hover {
+                transform: none;
+                box-shadow: none;
+            }
+
+            .item-card:hover {
+                transform: none;
+                box-shadow: 0 2px 8px rgba(254, 221, 88, 0.2);
+            }
+
+            .quantity-button:hover:not(:disabled) {
+                transform: none;
+            }
+
+            .add-button:hover {
+                transform: none;
+            }
+        }
+
+        /* Very small screens */
+        @media (max-width: 480px) {
+            .container {
+                padding: 8px;
+            }
+
+            .header-title {
+                font-size: 1.6rem;
+            }
+
+            .header-subtitle {
+                font-size: 0.95rem;
+            }
+
+            .room-tab-button {
+                min-width: 100px;
+                padding: 10px 12px;
+                font-size: 0.85rem;
+            }
+
+            .room-tab-icon {
+                font-size: 1.2rem;
+                margin-bottom: 4px;
+            }
+
+            .room-tab-count {
+                font-size: 0.65rem;
+            }
+
+            .items-grid {
+                grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+                gap: 10px;
+            }
+
+            .item-card {
+                padding: 10px;
+            }
+
+            .item-name {
+                font-size: 0.85rem;
+            }
+
+            .item-details {
+                font-size: 0.7rem;
+            }
+
+
+            .storage-size {
+                font-size: 2rem;
+            }
+
+            .storage-description {
+                font-size: 0.9rem;
+            }
+
+            .storage-uses-item {
+                font-size: 0.85rem;
+                line-height: 1.2;
+            }
+        }
+
+        /* Landscape orientation optimization */
+        @media (max-width: 768px) and (orientation: landscape) {
+            .room-tabs-wrapper {
+                padding: 0 5px;
+            }
+
+            .room-tab-button {
+                min-width: 90px;
+                padding: 8px 12px;
+            }
+
+            .room-tab-icon {
+                font-size: 1.1rem;
+                margin-bottom: 2px;
+            }
+
+            .room-tab-count {
+                font-size: 0.65rem;
+                margin-top: 1px;
+            }
+
+
+
+            .reset-button {
+                grid-column: 1 / -1;
+            }
+        }
+    </style></div><div class="section-cal"><div class="padding-global"><div class="padding-section-medium"><div class="container"><div class="header-section"><div class="header-title">Storage Calculator</div><div class="spacer-xsmall"></div><div class="header-subtitle">Select items from different rooms and we&#x27;ll calculate the optimal storage space needed.</div></div><div class="room-tabs-section"><div class="room-tabs-title">Select a room</div><div id="roomTabs" class="room-tabs-wrapper"><a data-room="living-room" href="#" class="room-tab-button w-inline-block"><div class="room-tab-icon">🛋️</div><div class="room-tab-text">Living room</div><div id="count-living-room" class="room-tab-count">Added: 0 items</div></a><a data-room="kitchen" href="#" class="room-tab-button w-inline-block"><div class="room-tab-icon">🍽️</div><div class="room-tab-text">Kitchen &amp; dining</div><div id="count-kitchen" class="room-tab-count">Added: 0 items</div></a><a data-room="bedroom" href="#" class="room-tab-button w-inline-block"><div class="room-tab-icon">🛏️</div><div class="room-tab-text">Bedroom</div><div id="count-bedroom" class="room-tab-count">Added: 0 items</div></a><a data-room="children" href="#" class="room-tab-button w-inline-block"><div class="room-tab-icon">🧸</div><div class="room-tab-text">Children&#x27;s room</div><div id="count-children" class="room-tab-count">Added: 0 items</div></a><a data-room="office" href="#" class="room-tab-button w-inline-block"><div class="room-tab-icon">🏠</div><div class="room-tab-text">Home office</div><div id="count-office" class="room-tab-count">Added: 0 items</div></a><a data-room="others" href="#" class="room-tab-button w-inline-block"><div class="room-tab-icon">📦</div><div class="room-tab-text">Others</div><div id="count-others" class="room-tab-count">Added: 0 items</div></a></div></div><div id="contentArea" class="content-area"><div class="welcome-message"><div class="welcome-text">👆 Choose a room from above to start selecting items</div></div></div><div id="resultsPanel" class="results-panel"><div class="div-block-94"><div class="results-left"><div class="results-title">Recommended storage</div><div id="storageSize" class="storage-size">Boxes</div><div id="storagePrice" class="storage-price">from £2.50/week</div></div><div class="results-right"><div id="storageDescription" class="storage-description">Approx the size of a Large Moving Box<br/>Default Text</div><div id="storageUses" class="storage-uses"><ul role="list" class="storage-uses-list"><li class="storage-uses-item">Store a box full of books</li><li class="storage-uses-item">Store a box full of toys</li><li class="storage-uses-item">Store a box full of electrical equipment</li><li class="storage-uses-item">Store clothes or bed linen</li></ul></div></div></div><div class="max-width-small align-center"><a id="reset-cal" href="#" class="reset-button w-inline-block"><div>Reset All Items</div></a></div></div></div></div></div></div><div class="w-embed w-script"><script>
+        // Updated storage data with new sizes and pricing
+        const storageSizes = [
+            {
+                size: 'Boxes',
+                maxCubicFeet: 20,
+                price: 'from £2.50/week',
+                description: '<strong>Approx the size of a Large Moving Box</strong><br>Store by the Box from £2.50/week',
+                uses: [
+                    'Store a box full of books',
+                    'Store a box full of toys', 
+                    'Store a box full of electrical equipment',
+                    'Store clothes or bed linen'
+                ]
+            },
+            {
+                size: '15 SqFt',
+                maxCubicFeet: 120,
+                price: 'from £10/week',
+                description: '<strong>Approx the size of a garden storage container</strong><br>Rent 15 sqft Storage Unit from £10/week',
+                uses: [
+                    'Perfect for decluttering items',
+                    'Store single furniture items or appliances',
+                    'Business use to store documents and boxes',
+                    'Students can store belongings during holiday'
+                ]
+            },
+            {
+                size: '35 SqFt',
+                maxCubicFeet: 280,
+                price: 'from £20/week',
+                description: '<strong>Approximately the size of an average UK garden shed</strong><br>Rent 35 sqft Storage Unit from £20/week',
+                uses: [
+                    'Contents of small studio flat',
+                    'Student storage during holidays',
+                    'Business storage for long term storage of business documents in archive boxes',
+                    'Decluttering your home'
+                ]
+            },
+            {
+                size: '70 SqFt',
+                maxCubicFeet: 560,
+                price: 'from £30/week',
+                description: '<strong>About the size of a UK super market delivery van</strong><br>Rent 70 sqft Storage Unit from £30/week',
+                uses: [
+                    'Storing contents of a 1 bedroom apartment',
+                    'Storing furniture from a Small Office relocation',
+                    'Document Archive Storage for a medium size business'
+                ]
+            },
+            {
+                size: '105 SqFt',
+                maxCubicFeet: 840,
+                price: 'from £45/week',
+                description: '<strong>Approximately the size of an average UK garage</strong><br>Rent 105 sqft Storage Unit from £45/week',
+                uses: [
+                    'Storing contents of small 2 bed flat',
+                    'Storing furniture and household contents of a 2 bed apartment',
+                    'Business use as temporary storage for stock or office furniture during an office relocation'
+                ]
+            },
+            {
+                size: '140+ SqFt',
+                maxCubicFeet: Infinity,
+                price: 'from £60/week',
+                description: '<strong>Large storage for substantial household contents</strong><br>Rent 140+ sqft Storage Unit from £60/week',
+                uses: [
+                    'Complete household contents of 3+ bedroom house',
+                    'Large business inventory storage',
+                    'Long-term storage for multiple households',
+                    'Commercial storage needs'
+                ]
+            }
+        ];
+
+        // Room items with icons
+        const roomItems = {
+            'living-room': [
                 { name: '2-seater sofa', cubicFeet: 30, icon: '🛋️' },
                 { name: '3-seater sofa', cubicFeet: 35, icon: '🛋️' },
                 { name: 'Corner sofa', cubicFeet: 45, icon: '🛋️' },
@@ -192,98 +802,192 @@
                 { name: 'Vacuum Cleaner', cubicFeet: 4, icon: '🧹' },
                 { name: 'Suitcases', cubicFeet: 6, icon: '🧳' }
             ]
-    };
+        };
 
-    let selectedItems = {};
-    let activeRoom = null;
+        let selectedItems = {};
+        let activeRoom = null;
 
-    function initCalculator() {
-      Object.keys(roomItems).forEach(room => {
-        selectedItems[room] = {};
-        roomItems[room].forEach(item => { selectedItems[room][item.name] = 0; });
-      });
-      document.querySelectorAll('.room-tab-button').forEach(tab => {
-        tab.addEventListener('click', function() { showRoom(this.dataset.room); });
-      });
-      showRoom('living-room');
-      calculateStorage();
-    }
+        function initCalculator() {
+            // Initialize selected items
+            Object.keys(roomItems).forEach(room => {
+                selectedItems[room] = {};
+                roomItems[room].forEach(item => {
+                    selectedItems[room][item.name] = 0;
+                });
+            });
 
-    function showRoom(room) {
-      document.querySelectorAll('.room-tab-button').forEach(tab => tab.classList.remove('active'));
-      document.querySelector(`[data-room="${room}"]`).classList.add('active');
-      activeRoom = room;
+            // Add event listeners
+            document.querySelectorAll('.room-tab-button').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const room = this.dataset.room;
+                    showRoom(room);
+                });
+            });
 
-      const contentArea = document.getElementById('contentArea');
-      contentArea.innerHTML = `<div class="items-section">
-        <div class="items-title">Items to store</div>
-        <div class="items-subtitle">${room}</div>
-        <div class="items-grid" id="itemsGrid"></div>
-      </div>`;
+            // Show living room by default
+            showRoom('living-room');
+            calculateStorage();
+        }
 
-      const itemsGrid = document.getElementById('itemsGrid');
-      roomItems[room].forEach(item => {
-        const div = document.createElement('div');
-        const quantity = selectedItems[room][item.name];
-        div.className = `item-card ${quantity > 0 ? 'selected' : ''}`;
-        div.innerHTML = `
-          <div class="item-icon">${item.icon}</div>
-          <div class="item-name">${item.name}</div>
-          <div class="item-details">${item.cubicFeet} cubic feet each</div>
-          <div class="item-controls">
-            ${quantity > 0 ? `
-              <button class="quantity-button" onclick="changeQuantity('${room}', '${item.name}', -1)">−</button>
-              <div class="quantity-display">${quantity}</div>
-              <button class="quantity-button" onclick="changeQuantity('${room}', '${item.name}', 1)">+</button>
-            ` : `<button class="add-button" onclick="changeQuantity('${room}', '${item.name}', 1)">Add</button>`}
-          </div>`;
-        itemsGrid.appendChild(div);
-      });
-    }
+        function showRoom(room) {
+            // Update active tab
+            document.querySelectorAll('.room-tab-button').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelector(`[data-room="${room}"]`).classList.add('active');
 
-    function changeQuantity(room, itemName, change) {
-      selectedItems[room][itemName] = Math.max(0, selectedItems[room][itemName] + change);
-      if (activeRoom === room) showRoom(room);
-      updateTabIndicators();
-      calculateStorage();
-    }
+            activeRoom = room;
+            const contentArea = document.getElementById('contentArea');
+            const roomName = room === 'children' ? "Children's room" : 
+                            room === 'living-room' ? 'Living room' :
+                            room === 'kitchen' ? 'Kitchen & dining' :
+                            room === 'office' ? 'Home office' :
+                            room.charAt(0).toUpperCase() + room.slice(1);
+            
+            contentArea.innerHTML = `
+                <div class="items-section">
+                    <div class="items-title">Items to store from</div>
+                    <div class="items-subtitle">${roomName}</div>
+                    <div class="items-grid" id="itemsGrid"></div>
+                </div>
+            `;
 
-    function updateTabIndicators() {
-      Object.keys(roomItems).forEach(room => {
-        const countElement = document.getElementById(`count-${room}`);
-        let roomItemCount = Object.values(selectedItems[room]).reduce((a, b) => a + b, 0);
-        countElement.textContent = `Added: ${roomItemCount} item${roomItemCount !== 1 ? 's' : ''}`;
-      });
-    }
+            const itemsGrid = document.getElementById('itemsGrid');
+            
+            roomItems[room].forEach(item => {
+                const itemCard = createItemCard(room, item);
+                itemsGrid.appendChild(itemCard);
+            });
+        }
 
-    function calculateStorage() {
-      let totalCubicFeet = 0;
-      Object.keys(selectedItems).forEach(room => {
-        Object.keys(selectedItems[room]).forEach(itemName => {
-          totalCubicFeet += roomItems[room].find(i => i.name === itemName).cubicFeet * selectedItems[room][itemName];
+        function createItemCard(room, item) {
+            const div = document.createElement('div');
+            const quantity = selectedItems[room][item.name];
+            
+            div.className = `item-card ${quantity > 0 ? 'selected' : ''}`;
+            div.innerHTML = `
+                <div class="item-icon">${item.icon}</div>
+                <div class="item-name">${item.name}</div>
+                <div class="item-details">${item.cubicFeet} cubic feet each</div>
+                <div class="item-controls">
+                    ${quantity > 0 ? `
+                        <button class="quantity-button" onclick="changeQuantity('${room}', '${item.name}', -1)" ${quantity === 0 ? 'disabled' : ''}>
+                            <div>−</div>
+                        </button>
+                        <div class="quantity-display">${quantity}</div>
+                        <button class="quantity-button" onclick="changeQuantity('${room}', '${item.name}', 1)">
+                            <div>+</div>
+                        </button>
+                    ` : `
+                        <button class="add-button" onclick="changeQuantity('${room}', '${item.name}', 1)">
+                            <div>Add</div>
+                        </button>
+                    `}
+                </div>
+            `;
+            
+            // Add item indicator if quantity > 0
+            if (quantity > 0) {
+                const indicator = document.createElement('div');
+                indicator.className = 'item-indicator';
+                indicator.textContent = quantity;
+                div.appendChild(indicator);
+            }
+            
+            return div;
+        }
+
+        function changeQuantity(room, itemName, change) {
+            selectedItems[room][itemName] = Math.max(0, selectedItems[room][itemName] + change);
+            
+            // Refresh the current room display
+            if (activeRoom === room) {
+                showRoom(room);
+            }
+            
+            updateTabIndicators();
+            calculateStorage();
+        }
+
+        function updateTabIndicators() {
+            Object.keys(roomItems).forEach(room => {
+                const countElement = document.getElementById(`count-${room}`);
+                
+                let roomItemCount = 0;
+                Object.values(selectedItems[room]).forEach(qty => {
+                    roomItemCount += qty;
+                });
+                
+                countElement.textContent = `Added: ${roomItemCount} item${roomItemCount === 1 ? '' : 's'}`;
+            });
+        }
+
+        function calculateStorage() {
+            let totalCubicFeet = 0;
+            let totalItems = 0;
+            
+            Object.keys(selectedItems).forEach(room => {
+                Object.keys(selectedItems[room]).forEach(itemName => {
+                    const quantity = selectedItems[room][itemName];
+                    if (quantity > 0) {
+                        const item = roomItems[room].find(i => i.name === itemName);
+                        if (item) {
+                            totalCubicFeet += item.cubicFeet * quantity;
+                            totalItems += quantity;
+                        }
+                    }
+                });
+            });
+            
+            // Find recommended storage size
+            const recommendation = storageSizes.find(size => totalCubicFeet <= size.maxCubicFeet) || storageSizes[storageSizes.length - 1];
+            
+            // Update results
+            document.getElementById('storageSize').textContent = recommendation.size;
+            document.getElementById('storagePrice').textContent = recommendation.price;
+            document.getElementById('storageDescription').innerHTML = recommendation.description;
+            
+            const usesContainer = document.getElementById('storageUses');
+            usesContainer.innerHTML = `
+                <ul class="storage-uses-list">
+                    ${recommendation.uses.map(use => `<li class="storage-uses-item">${use}</li>`).join('')}
+                </ul>
+            `;
+        }
+
+        function resetCalculator() {
+            Object.keys(selectedItems).forEach(room => {
+                Object.keys(selectedItems[room]).forEach(itemName => {
+                    selectedItems[room][itemName] = 0;
+                });
+            });
+            
+            document.querySelectorAll('.room-tab-button').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            document.getElementById('contentArea').innerHTML = `
+                <div class="welcome-message">
+                    <div class="welcome-text">👆 Choose a room from above to start selecting items</div>
+                </div>
+            `;
+            
+            activeRoom = null;
+            updateTabIndicators();
+            calculateStorage();
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', initCalculator);
+        if (document.readyState !== 'loading') {
+            initCalculator();
+        }
+        
+        
+        
+          // Attach click event
+        document.getElementById("reset-cal").addEventListener("click", function() {
+          resetCalculator();
         });
-      });
 
-      // Apply new calculation logic
-      const bufferedVolume = totalCubicFeet * 1.2;
-      const containers = Math.ceil(bufferedVolume / 250);
-
-      document.getElementById('storageSize').textContent = containers;
-      document.getElementById('storagePrice').textContent = "Container(s)";
-      document.getElementById('storageDescription').textContent =
-        containers > 0 ? `You need ${containers} container(s)` : "Add items to see recommendation";
-    }
-
-    function resetCalculator() {
-      Object.keys(selectedItems).forEach(room => {
-        Object.keys(selectedItems[room]).forEach(item => selectedItems[room][item] = 0);
-      });
-      showRoom(activeRoom);
-      updateTabIndicators();
-      calculateStorage();
-    }
-
-    window.onload = initCalculator;
-  </script>
-</body>
-</html>
+    </script>
